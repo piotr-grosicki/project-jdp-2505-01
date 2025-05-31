@@ -16,18 +16,18 @@ public class OrderController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Object> createOrder() {
-        return ResponseEntity.ok(new Object());
+    public ResponseEntity<String> createOrder() {
+        return ResponseEntity.ok("Order created");
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<Object> getOrderById(@PathVariable String orderId) {
-        return ResponseEntity.ok(new Object());
+    public ResponseEntity<String> getOrderById(@PathVariable String orderId) {
+        return ResponseEntity.ok(orderId);
     }
 
     @PutMapping("/update?orderId={orderId}")
-    public ResponseEntity<Object> updateOrder(@PathVariable String orderId) {
-        return ResponseEntity.ok(new Object());
+    public ResponseEntity<String> updateOrder(@PathVariable String orderId) {
+        return ResponseEntity.ok(orderId);
     }
 
     @DeleteMapping("/delete?orderId={orderId}")
