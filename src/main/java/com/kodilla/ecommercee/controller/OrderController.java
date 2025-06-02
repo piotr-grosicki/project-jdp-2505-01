@@ -25,12 +25,12 @@ public class OrderController {
         return ResponseEntity.ok(orderId);
     }
 
-    @PutMapping("/update?orderId={orderId}")
+    @PutMapping("/{orderId}")
     public ResponseEntity<String> updateOrder(@PathVariable String orderId) {
         return ResponseEntity.ok(orderId);
     }
 
-    @DeleteMapping("/delete?orderId={orderId}")
+    @DeleteMapping("/{orderId}")
     public ResponseEntity<Void> deleteOrder(@PathVariable String orderId) {
         return ResponseEntity.ok().build();
     }
