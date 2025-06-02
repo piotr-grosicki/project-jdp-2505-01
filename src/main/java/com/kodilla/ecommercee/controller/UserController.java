@@ -12,12 +12,12 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @PutMapping("/block?user={userId}")
+    @PutMapping("/block/{userId}")
     public ResponseEntity<String> blockUser(@PathVariable String userId) {
         return ResponseEntity.ok("User blocked: " + userId);
     }
 
-    @PostMapping("/generateKey?user={userId}")
+    @PostMapping("/{userId}/keys")
     public ResponseEntity<String> generateKey(@PathVariable String userId) {
         return ResponseEntity.ok("Key generated for user: " + userId);
     }
