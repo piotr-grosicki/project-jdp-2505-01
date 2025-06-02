@@ -39,4 +39,12 @@ public class Order {
 //    )
 //    @ManyToMany
 //    private List<Product> products = new ArrayList<>();
+
+//    @ManyToOne
+//    @JoinColumn(name = "user_id")
+//    private User user;
+
+//    @OneToOne
+//    @JoinColumn(name = "cart_id")
+//    private Cart cart;
 }
