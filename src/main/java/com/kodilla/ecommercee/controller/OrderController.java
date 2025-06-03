@@ -10,7 +10,7 @@ import java.util.List;
 @RequestMapping("/api/v1/orders")
 public class OrderController {
 
-    @GetMapping("/all")
+    @GetMapping("/")
     public ResponseEntity<List<Object>> getAllOrders() {
         return ResponseEntity.ok(new ArrayList<>());
     }
