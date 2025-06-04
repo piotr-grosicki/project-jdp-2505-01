@@ -16,7 +16,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "order")
+@Table(name = "orders")
 public class Order {
 
     @Id
@@ -40,9 +40,9 @@ public class Order {
 //    @ManyToMany
 //    private List<Product> products = new ArrayList<>();
 
-//    @ManyToOne
-//    @JoinColumn(name = "user_id")
-//    private User user;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
 //    @OneToOne
 //    @JoinColumn(name = "cart_id")

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -29,6 +31,7 @@ public class User {
     @Column(name = "email")
     private String email;
 
+    @Setter
     @Column(name = "is_blocked")
     private boolean isBlocked;
 
@@ -44,9 +47,12 @@ public class User {
     @Column(name = "token_expires_at")
     private LocalDateTime tokenExpiresAt;
 
-    //@OneToMany
-    //@JoinColumn(name = "user_id")
-    //private List<Order> orders;
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER
+    )
+    private List<Order> orders = new ArrayList<>();
 
     //@OneToMany
     //@JoinColumn(name = "user_id")
