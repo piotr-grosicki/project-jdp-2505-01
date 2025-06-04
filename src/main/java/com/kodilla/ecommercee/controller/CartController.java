@@ -8,19 +8,19 @@ import org.springframework.web.bind.annotation.*;
 public class CartController {
 
     @PostMapping
-    public ResponseEntity<Long> createEmptyCart() {
+    public ResponseEntity<Void> createEmptyCart() {
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{cartId}")
-    public ResponseEntity<Object> getCartContents(@PathVariable Long cartId) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> getCartContents(@PathVariable Long cartId) {
+        return ResponseEntity.ok("Cart Content: " + cartId);
     }
 
     @PostMapping("/{cartId}/products/{productId}")
-    public ResponseEntity<Object> addProductToCart(
+    public ResponseEntity<String> addProductToCart(
             @PathVariable Long cartId, @PathVariable Long productId) {
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("Product added to cart:" + productId);
     }
 
     @DeleteMapping("/{cartId}/products/{productId}")
@@ -30,7 +30,7 @@ public class CartController {
     }
 
     @PostMapping("/{cartId}/orders")
-    public ResponseEntity<Long> convertCartToOrder(@PathVariable Long cartId) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> convertCartToOrder(@PathVariable Long cartId) {
+        return ResponseEntity.ok("Created order: " + cartId);
     }
 }
