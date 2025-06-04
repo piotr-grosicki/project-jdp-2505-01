@@ -3,7 +3,6 @@ package com.kodilla.ecommercee.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 @RestController
 @RequestMapping("/api/v1/products")
 public class ProductController {
@@ -14,19 +13,19 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<Long> getProduct(@PathVariable Long productId) {
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<Void> getProduct(@PathVariable Long productId) {
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping
-    public ResponseEntity<Object> createProduct(@RequestBody Object product) {
-        return ResponseEntity.ok(product);
+    public ResponseEntity<String> createProduct(@RequestBody String product) {
+        return ResponseEntity.ok("product" + product);
     }
 
     @PutMapping("/{productId}")
-    public ResponseEntity<Object> updateProduct(
-            @PathVariable Long productId, @RequestBody Object updatedProduct) {
-        return ResponseEntity.ok(updatedProduct);
+    public ResponseEntity<String> updateProduct(
+            @PathVariable Long productId, @RequestBody String updatedProduct) {
+        return ResponseEntity.ok("updatedProduct"+ updatedProduct);
     }
 
     @DeleteMapping("/{productId}")
