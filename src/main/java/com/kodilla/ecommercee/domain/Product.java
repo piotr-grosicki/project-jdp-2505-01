@@ -39,6 +39,7 @@ public class Product {
 //    private List<Order> orders = new ArrayList<>();
 //    @ManyToMany
 //    private List<Cart> carts = new ArrayList<>();
-//    @ManyToOne
-//    private Group group;
+
+    @ManyToOne
+    private Group group;
 }
