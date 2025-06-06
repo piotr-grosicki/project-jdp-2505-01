@@ -59,25 +59,25 @@ class GroupRepositoryTest {
         }
     }
 
-//    @Test
-//    void testUpdateGroup() {
-//        // Given
-//        Group savedGroup = groupRepository.save(group);
-//        savedGroup.setName("Updated Group");
-//        savedGroup.setDescription("This is an updated test group");
-//
-//        // When
-//        Group updatedGroup = groupRepository.save(savedGroup);
-//
-//        // Then
-//        try {
-//            assertNotNull(updatedGroup);
-//            assertEquals("Updated Group", updatedGroup.getName());
-//            assertEquals("This is an updated test group", updatedGroup.getDescription());
-//        } catch (Exception e) {
-//            fail("Group update failed: " + e.getMessage());
-//        } finally {
-//            groupRepository.delete(updatedGroup);
-//        }
-//    }
+    @Test
+    void testUpdateGroup() {
+        // Given
+        Group savedGroup = groupRepository.save(group);
+        savedGroup.setName("Updated Group");
+        savedGroup.setDescription("This is an updated test group");
+
+        // When
+        Group updatedGroup = groupRepository.save(savedGroup);
+
+        // Then
+        try {
+            assertNotNull(updatedGroup);
+            assertEquals("Updated Group", updatedGroup.getName());
+            assertEquals("This is an updated test group", updatedGroup.getDescription());
+        } catch (Exception e) {
+            fail("Group update failed: " + e.getMessage());
+        } finally {
+            groupRepository.delete(updatedGroup);
+        }
+    }
 }

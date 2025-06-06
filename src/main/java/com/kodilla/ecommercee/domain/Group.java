@@ -1,10 +1,8 @@
 package com.kodilla.ecommercee.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,16 +20,18 @@ public class Group {
     @GeneratedValue
     private Long id;
 
+    @Setter
     @Column(name = "name")
     private String name;
 
+    @Setter
     @Column(name = "description")
     private String description;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @OneToMany(orphanRemoval = true)
+    @OneToMany
     @JoinColumn(name = "group_id")
     private List<Product> products = new ArrayList<>();
 }
