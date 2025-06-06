@@ -1,10 +1,12 @@
 package com.kodilla.ecommercee.repository;
 
 import com.kodilla.ecommercee.domain.Group;
+import com.kodilla.ecommercee.domain.Product;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,6 +16,9 @@ class GroupRepositoryTest {
 
     @Autowired
     private GroupRepository groupRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     private final Group group = Group.builder()
             .name("Test Group")
@@ -78,6 +83,67 @@ class GroupRepositoryTest {
             fail("Group update failed: " + e.getMessage());
         } finally {
             groupRepository.delete(updatedGroup);
+        }
+    }
+
+    @Test
+    void testAddProductToGroup() {
+        // Given
+        Group savedGroup = groupRepository.save(group);
+        Product product = Product.builder()
+                .name("Test Product")
+                .price(new BigDecimal("19.99"))
+                .description("This is a test product")
+                .stockQuantity(100L)
+                .isActive(true)
+                .createdAt(LocalDateTime.now())
+                .group(savedGroup)
+                .build();
+
+        // When
+        Product savedProduct = productRepository.save(product);
+
+        // Then
+        try {
+            assertNotNull(savedProduct.getId());
+            assertEquals(savedGroup.getId(), savedProduct.getGroup().getId());
+            assertEquals("Test Product", savedProduct.getName());
+        } catch (Exception e) {
+            fail("Adding product to group failed: " + e.getMessage());
+        } finally {
+            productRepository.delete(savedProduct);
+            groupRepository.delete(savedGroup);
+        }
+    }
+
+    @Test
+    void testRemoveProductFromGroup() {
+        // Given
+        Group savedGroup = groupRepository.save(group);
+        Product product = Product.builder()
+                .name("Test Product")
+                .price(new BigDecimal("19.99"))
+                .description("This is a test product")
+                .stockQuantity(100L)
+                .isActive(true)
+                .createdAt(LocalDateTime.now())
+                .group(savedGroup)
+                .build();
+
+        Product savedProduct = productRepository.save(product);
+
+        // When
+        productRepository.delete(savedProduct);
+        Group updatedGroup = groupRepository.findById(savedGroup.getId()).orElse(null);
+
+        // Then
+        try {
+            assertNotNull(updatedGroup);
+            assertFalse(updatedGroup.getProducts().contains(savedProduct));
+        } catch (Exception e) {
+            fail("Removing product from group failed: " + e.getMessage());
+        } finally {
+            groupRepository.delete(savedGroup);
         }
     }
 }
