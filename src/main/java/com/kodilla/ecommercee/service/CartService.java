@@ -1,16 +1,25 @@
 package com.kodilla.ecommercee.service;
 
+import com.kodilla.ecommercee.domain.Cart;
+import com.kodilla.ecommercee.domain.CartStatusEnum;
+import com.kodilla.ecommercee.repository.CartRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
 public class CartService {
 
-    // private CartRepository cartRepository;
+    private final CartRepository cartRepository;
 
-    public void createEmptyCart() {
-        // Logic to create an empty cart
+    public Cart createEmptyCart() {
+        Cart cart = Cart.builder()
+                .status(CartStatusEnum.CREATED)
+                .createdAt(LocalDateTime.now())
+                .build();
+        return cartRepository.save(cart);
     }
 
     public String getCartContents(Long cartId) {

@@ -1,15 +1,24 @@
 package com.kodilla.ecommercee.controller;
 
+import com.kodilla.ecommercee.dto.CartDTO;
+import com.kodilla.ecommercee.mapper.CartMapper;
+import com.kodilla.ecommercee.service.CartService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/carts")
 public class CartController {
 
+    private final CartService cartService;
+    private final CartMapper cartMapper;
+
     @PostMapping
-    public ResponseEntity<Void> createEmptyCart() {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<CartDTO> createEmptyCart() {
+        CartDTO cartDto = cartMapper.mapToCartDto(cartService.createEmptyCart());
+        return ResponseEntity.ok(cartDto);
     }
 
     @GetMapping("/{cartId}")
