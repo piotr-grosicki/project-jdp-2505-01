@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "product")
+@Table(name = "products")
 public class Product {
 
     @Id
@@ -35,10 +35,12 @@ public class Product {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-//    @ManyToMany
-//    private List<Order> orders = new ArrayList<>();
-//    @ManyToMany
-//    private List<Cart> carts = new ArrayList<>();
-//    @ManyToOne
-//    private Group group;
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private List<Order> orders = new ArrayList<>();
+
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private List<Cart> carts = new ArrayList<>();
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Group group;;
 }

@@ -15,7 +15,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "cart")
+@Table(name = "carts")
 public class Cart {
 
     @Id
@@ -26,20 +26,21 @@ public class Cart {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-//    @ManyToMany
-//    @JoinTable(
-//            name = "cart_has_product",
-//            joinColumns = @JoinColumn(name = "cart_id"),
-//            inverseJoinColumns = @JoinColumn(name = "product_id")
-//    )
-//    private List<Product> = new ArrayList<>();
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "cart_has_product",
+            joinColumns = @JoinColumn(name = "cart_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    private List<Product> products = new ArrayList<>();
 
-//    @ManyToOne
-//    @JoinColumn(name = "user_id")
-//    private User user;
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-//    @OneToOne
-//    @JoinColumn(name = "order_id")
-//    private Order order;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "order_id")
+    private Order order;
+
 
 }
