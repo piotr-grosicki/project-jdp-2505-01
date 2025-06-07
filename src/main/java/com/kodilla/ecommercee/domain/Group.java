@@ -6,7 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
-
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -29,7 +30,8 @@ public class Group {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    //@OneToMany(orphanRemoval = true)
-    //@JoinColumn(name = "group_id")
-    //private List<Product> products = new ArrayList<>();
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_id")
+    private List<Product> products = new ArrayList<>();
+
 }

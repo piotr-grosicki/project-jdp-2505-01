@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "product")
+@Table(name = "products")
 public class Product {
 
     @Id
@@ -35,10 +35,13 @@ public class Product {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-//    @ManyToMany
-//    private List<Order> orders = new ArrayList<>();
-//    @ManyToMany
-//    private List<Cart> carts = new ArrayList<>();
-//    @ManyToOne
-//    private Group group;
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Order> orders = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Cart> carts = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "group_id")
+    private Group group;
 }
