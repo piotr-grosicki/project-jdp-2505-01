@@ -26,7 +26,7 @@ public class Cart {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "cart_has_product",
             joinColumns = @JoinColumn(name = "cart_id"),
@@ -34,11 +34,11 @@ public class Cart {
     )
     private List<Product> products = new ArrayList<>();
 
-    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
 
