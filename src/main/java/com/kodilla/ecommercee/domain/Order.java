@@ -32,7 +32,7 @@ public class Order {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "order_has_product",
             joinColumns = @JoinColumn(name = "order_id"),
