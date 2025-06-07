@@ -100,6 +100,8 @@ class GroupRepositoryTest {
                 .group(savedGroup)
                 .build();
 
+        savedGroup.getProducts().add(product);
+
         // When
         Product savedProduct = productRepository.save(product);
 
@@ -111,8 +113,8 @@ class GroupRepositoryTest {
         } catch (Exception e) {
             fail("Adding product to group failed: " + e.getMessage());
         } finally {
-            productRepository.delete(savedProduct);
             groupRepository.delete(savedGroup);
+            productRepository.delete(savedProduct);
         }
     }
 
@@ -129,6 +131,8 @@ class GroupRepositoryTest {
                 .createdAt(LocalDateTime.now())
                 .group(savedGroup)
                 .build();
+
+        savedGroup.getProducts().add(product);
 
         Product savedProduct = productRepository.save(product);
 

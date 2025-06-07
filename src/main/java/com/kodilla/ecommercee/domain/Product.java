@@ -41,5 +41,6 @@ public class Product {
 //    private List<Cart> carts = new ArrayList<>();
 
     @ManyToOne
+    @JoinColumn(name = "group_id")
     private Group group;
 }

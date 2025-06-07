@@ -32,7 +32,6 @@ public class Group {
     private LocalDateTime createdAt;
 
     @Builder.Default
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "group_id")
+    @OneToMany(mappedBy = "group", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Product> products = new ArrayList<>();
 }
