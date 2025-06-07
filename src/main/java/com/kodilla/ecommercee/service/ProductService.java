@@ -2,6 +2,7 @@ package com.kodilla.ecommercee.service;
 
 import com.kodilla.ecommercee.domain.Product;
 import com.kodilla.ecommercee.dto.ProductDTO;
+import com.kodilla.ecommercee.exception.ProductNotFoundException;
 import com.kodilla.ecommercee.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,5 +19,10 @@ public class ProductService {
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
+    }
+
+    public Product getProduct(Long productId) throws ProductNotFoundException {
+        return productRepository.findById(productId)
+                .orElseThrow(ProductNotFoundException::new);
     }
 }
