@@ -24,6 +24,14 @@ class CartRepositoryTest {
                 .build();
     }
 
+    private Cart buildSecondCart(CartStatusEnum status) {
+        return Cart.builder()
+                .status(status)
+                .createdAt(LocalDateTime.now().minusDays(5))
+                .build();
+    }
+
+
     @Test
     void testCreateNewCart() {
         // Given
@@ -72,13 +80,11 @@ class CartRepositoryTest {
     @Test
     void testFindByCreatedAtBefore() {
         // Given
-        Cart oldCart = buildCart(CartStatusEnum.ABANDONED);
-        oldCart.setCreatedAt(LocalDateTime.now().minusDays(5));
         Cart newCart = buildCart(CartStatusEnum.ABANDONED);
-        newCart.setCreatedAt(LocalDateTime.now().minusDays(1));
+        Cart oldCart = buildSecondCart(CartStatusEnum.ABANDONED);
 
-        cartRepository.save(oldCart);
         cartRepository.save(newCart);
+        cartRepository.save(oldCart);
 
         // When
         Optional<Cart> oldCarts = cartRepository.findByCreatedAtBefore(LocalDateTime.now().minusDays(2));
