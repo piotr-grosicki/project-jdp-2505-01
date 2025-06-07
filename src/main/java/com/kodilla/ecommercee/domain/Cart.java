@@ -10,7 +10,6 @@ import java.util.List;
 @Entity
 @Builder
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "carts")
@@ -19,6 +18,7 @@ public class Cart {
     @Id
     @GeneratedValue
     private Long id;
+    @Setter
     @Column(name = "status")
     private CartStatusEnum status;
     @Column(name = "created_at")
