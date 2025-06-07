@@ -45,11 +45,11 @@ public class User {
     @Column(name = "token_expires_at")
     private LocalDateTime tokenExpiresAt;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private List<Order> orders;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany( fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private List<Cart> carts;
 

@@ -30,7 +30,7 @@ public class Group {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
     private List<Product> products = new ArrayList<>();
 
