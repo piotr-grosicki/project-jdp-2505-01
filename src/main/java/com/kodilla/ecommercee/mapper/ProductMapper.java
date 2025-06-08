@@ -43,7 +43,6 @@ public class ProductMapper {
                 .price(new BigDecimal(productDTO.price()))
                 .stockQuantity(Long.parseLong(productDTO.quantity()))
                 .isActive("ACTIVE".equalsIgnoreCase(productDTO.status()))
-                .createdAt(LocalDateTime.parse(productDTO.createdAt()))
                 .build();
     }
 }

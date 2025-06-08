@@ -35,18 +35,22 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO dto) {
-        return ResponseEntity.ok().build();
+        Product product = productMapper.toProduct(dto);
+        return ResponseEntity.ok(productMapper.toProductDTO(productService.createProduct(product)));
     }
 
-    @PutMapping("/{productId}")
-    public ResponseEntity<ProductDTO> updateProduct(
-            @PathVariable Long productId, @RequestBody ProductDTO dto) {
-        return ResponseEntity.ok().build();
-
+    @PutMapping
+    public ResponseEntity<ProductDTO> updateProduct(@RequestBody ProductDTO dto)
+            throws ProductNotFoundException {
+        Product product = productMapper.toProduct(dto);
+        Product updatedProduct = productService.updateProduct(product);
+        return ResponseEntity.ok(productMapper.toProductDTO(updatedProduct));
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId)
+            throws ProductNotFoundException {
+        productService.deleteProduct(productId);
         return ResponseEntity.ok().build();
     }
 }
