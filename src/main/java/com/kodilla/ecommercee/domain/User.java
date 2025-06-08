@@ -2,6 +2,7 @@ package com.kodilla.ecommercee.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.List;
 
 import java.time.LocalDateTime;
 
@@ -44,12 +45,12 @@ public class User {
     @Column(name = "token_expires_at")
     private LocalDateTime tokenExpiresAt;
 
-    //@OneToMany
-    //@JoinColumn(name = "user_id")
-    //private List<Order> orders;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private List<Order> orders;
 
-    //@OneToMany
-    //@JoinColumn(name = "user_id")
-    //private List<Cart> carts;
+    @OneToMany( fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private List<Cart> carts;
 
 }

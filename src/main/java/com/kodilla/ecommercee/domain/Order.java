@@ -32,19 +32,20 @@ public class Order {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-//    @JoinTable(
-//            name = "order_has_product",
-//            joinColumns = @JoinColumn(name = "order_id"),
-//            inverseJoinColumns = @JoinColumn(name = "product_id")
-//    )
-//    @ManyToMany
-//    private List<Product> products = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "order_has_product",
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    private List<Product> products = new ArrayList<>();
 
-//    @ManyToOne
-//    @JoinColumn(name = "user_id")
-//    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-//    @OneToOne
-//    @JoinColumn(name = "cart_id")
-//    private Cart cart;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
+
 }
