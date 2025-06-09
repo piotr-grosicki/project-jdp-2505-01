@@ -5,7 +5,9 @@ import com.kodilla.ecommercee.domain.Product;
 import com.kodilla.ecommercee.dto.GroupDTO;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 public class GroupMapper {
@@ -16,9 +18,7 @@ public class GroupMapper {
                 group.getName(),
                 group.getDescription(),
                 group.getCreatedAt(),
-                group.getProducts().stream()
-                        .map(Product::getId)
-                        .toList()
+                getIds(group)
         );
     }
 
@@ -35,5 +35,14 @@ public class GroupMapper {
                 .description(groupDTO.description())
                 .createdAt(groupDTO.createdAt())
                 .build();
+    }
+
+    private static List<Long> getIds(Group group) {
+
+        return Stream.ofNullable(group.getProducts())
+                .flatMap(Collection::stream)
+                .filter(p -> p != null && p.getId() != null)
+                .map(Product::getId)
+                .toList();
     }
 }

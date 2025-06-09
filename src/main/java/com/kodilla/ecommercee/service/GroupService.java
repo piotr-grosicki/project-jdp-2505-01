@@ -6,6 +6,7 @@ import com.kodilla.ecommercee.repository.GroupRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -19,7 +20,12 @@ public class GroupService {
     }
 
     public Group createGroup(Group group) {
-        return groupRepository.save(group);
+        Group newGroup = Group.builder()
+                .name(group.getName())
+                .description(group.getDescription())
+                .createdAt(LocalDateTime.now())
+                .build();
+        return groupRepository.save(newGroup);
     }
 
     public Group getGroupById(Long groupId) throws GroupNotFoundException {
