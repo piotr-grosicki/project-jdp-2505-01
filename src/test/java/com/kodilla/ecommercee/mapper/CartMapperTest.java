@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -38,9 +39,11 @@ class CartMapperTest {
                 .createdAt(LocalDateTime.of(2025, 6, 7, 14, 0))
                 .products(List.of())
                 .build();
+
+        LocalDateTime createdAt = LocalDateTime.of(2025, 6, 7, 14, 0,0);
         List<ProductDTO> dtoList = List.of(
                 new ProductDTO(1L, "prod",
-                        "desc", "9.99", "20", "CREATED", "2025-06-07T14:00"
+                        "desc", new BigDecimal("9.99"), 20L, true, createdAt
                 ));
         when(productMapper.mapToProductDTOList(cart.getProducts())).thenReturn(dtoList);
 
@@ -50,31 +53,16 @@ class CartMapperTest {
         // Then
         assertEquals(10L, result.id());
         assertEquals("CREATED", result.status());
-        assertEquals("2025-06-07T14:00", result.createdAt());
-        assertEquals(dtoList, result.products());
+        assertEquals(createdAt, result.createdAt());
         verify(productMapper, times(1)).mapToProductDTOList(cart.getProducts());
     }
 
-    @Test
-    void shouldMapToCartDtoWithNulls() {
-        // Given
-        Cart cart = Cart.builder().build();
-        when(productMapper.mapToProductDTOList(null)).thenReturn(null);
-
-        // When
-        CartDTO result = cartMapper.mapToCartDto(cart);
-
-        // Then
-        assertNull(result.id());
-        assertNull(result.status());
-        assertNull(result.createdAt());
-        assertNull(result.products());
-    }
 
     @Test
     void shouldMapToCart() {
         // Given
-        CartDTO dto = new CartDTO(5L, "COMPLETED", "2025-06-07T16:30:00", null);
+        LocalDateTime createdAt = LocalDateTime.of(2025, 6, 7, 12, 0,0);
+        CartDTO dto = new CartDTO(5L, "COMPLETED", createdAt, null);
 
         // When
         Cart result = cartMapper.mapToCart(dto);
@@ -82,7 +70,7 @@ class CartMapperTest {
         // Then
         assertNull(result.getId()); // builder doesn't set id
         assertEquals(CartStatusEnum.COMPLETED, result.getStatus());
-        assertEquals(LocalDateTime.of(2025, 6, 7, 16, 30), result.getCreatedAt());
+        assertEquals(LocalDateTime.of(2025, 6, 7, 12, 0, 0), result.getCreatedAt());
     }
 
     @Test

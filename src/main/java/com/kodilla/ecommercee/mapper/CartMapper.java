@@ -18,15 +18,21 @@ public class CartMapper {
 
     public CartDTO mapToCartDto(Cart cart) {
         String status = cart.getStatus() != null ? cart.getStatus().name() : null;
-        String createdAt = cart.getCreatedAt() != null ? cart.getCreatedAt().toString() : null;
         List<ProductDTO> products = productMapper.mapToProductDTOList(cart.getProducts());
-        return new CartDTO(cart.getId(), status, createdAt, products);
+        return new CartDTO(cart.getId(), status, cart.getCreatedAt(),
+                products.stream()
+                .map(this::getId)
+                .toList());
     }
 
     public Cart mapToCart(CartDTO cartDto) {
         return Cart.builder()
                 .status(cartDto.status() != null ? CartStatusEnum.valueOf(cartDto.status()) : null)
-                .createdAt(cartDto.createdAt() != null ? LocalDateTime.parse(cartDto.createdAt()) : null)
+                .createdAt(cartDto.createdAt())
                 .build();
+    }
+
+    private Long getId(ProductDTO productDTO) {
+        return productDTO != null ? productDTO.id() : null;
     }
 }

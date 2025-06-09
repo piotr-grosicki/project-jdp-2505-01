@@ -2,6 +2,7 @@ package com.kodilla.ecommercee.dto;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,11 +13,11 @@ class CartDTOTest {
     @Test
     void shouldCreateCartDTOAndGetAllFields() {
         // Given
-        ProductDTO product = mock(ProductDTO.class);
-        List<ProductDTO> products = List.of(product);
+        List<Long> products = List.of(1L, 2L, 3L);
         Long expectedId = 1L;
         String expectedStatus = "PENDING";
-        String expectedCreatedAt = "2025-06-07T12:00:00";
+        LocalDateTime expectedCreatedAt =
+                LocalDateTime.of(2025, 6, 7, 12, 0,0);
 
         // When
         CartDTO cart = new CartDTO(expectedId, expectedStatus, expectedCreatedAt, products);
@@ -32,11 +33,14 @@ class CartDTOTest {
     @Test
     void shouldImplementEqualsAndHashCodeCorrectly() {
         // Given
-        ProductDTO product = mock(ProductDTO.class);
-        List<ProductDTO> products = List.of(product);
-        CartDTO cart1 = new CartDTO(1L, "NEW", "2025-06-07T10:00:00", products);
-        CartDTO cart2 = new CartDTO(1L, "NEW", "2025-06-07T10:00:00", products);
-        CartDTO cart3 = new CartDTO(2L, "NEW", "2025-06-07T10:00:00", products);
+        List<Long> products = List.of(1L, 2L, 3L);
+        LocalDateTime createdAt = LocalDateTime.of(2025, 6, 7, 12, 0,0);
+        CartDTO cart1 =
+                new CartDTO(1L, "NEW", createdAt, products);
+        CartDTO cart2 =
+                new CartDTO(1L, "NEW", createdAt, products);
+        CartDTO cart3 =
+                new CartDTO(2L, "NEW", createdAt, products);
 
         // Then
         assertEquals(cart1, cart2, "Carts with same data should be equal");
@@ -49,10 +53,10 @@ class CartDTOTest {
         // Given
         ProductDTO product1 = mock(ProductDTO.class);
         ProductDTO product2 = mock(ProductDTO.class);
-        List<ProductDTO> products = List.of(product1, product2);
+        List<Long> products = List.of(1L, 2L);
         Long id = 42L;
         String status = "COMPLETED";
-        String createdAt = "2025-06-07T15:30:00";
+        LocalDateTime createdAt = LocalDateTime.of(2025, 6, 7, 12, 0,0);
         CartDTO cart = new CartDTO(id, status, createdAt, products);
 
         // When
