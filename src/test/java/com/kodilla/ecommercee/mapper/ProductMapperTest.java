@@ -21,7 +21,6 @@ class ProductMapperTest {
     private ProductMapper mapper;
 
     @Test
-    @DisplayName("Should map Product to ProductDTO correctly when active")
     void shouldMapProductToDTOActive() {
         // Given
         Product product = Product.builder()
@@ -42,15 +41,15 @@ class ProductMapperTest {
                 () -> assertEquals(10L, dto.id()),
                 () -> assertEquals("ProdName", dto.name()),
                 () -> assertEquals("ProdDesc", dto.description()),
-                () -> assertEquals("123.45", dto.price()),
-                () -> assertEquals("20", dto.quantity()),
-                () -> assertEquals("ACTIVE", dto.status()),
-                () -> assertEquals("2025-06-08T14:30", dto.createdAt().substring(0,16))
+                () -> assertEquals(new BigDecimal("123.45"), dto.price()),
+                () -> assertEquals(20L, dto.quantity()),
+                () -> assertEquals(true, dto.isActive()),
+                () -> assertEquals(LocalDateTime.of(2025, 6, 8, 14, 30, 0),
+                        dto.createdAt())
         );
     }
 
     @Test
-    @DisplayName("Should map Product to ProductDTO with INACTIVE status")
     void shouldMapProductToDTOInactive() {
         // Given
         Product product = Product.builder()
@@ -67,11 +66,10 @@ class ProductMapperTest {
         ProductDTO dto = mapper.toProductDTO(product);
 
         // Then
-        assertEquals("INACTIVE", dto.status());
+        assertEquals(false, dto.isActive());
     }
 
     @Test
-    @DisplayName("Should map list of Products to list of ProductDTOs")
     void shouldMapListToDTOList() {
         // Given
         Product p1 = Product.builder()
@@ -96,22 +94,21 @@ class ProductMapperTest {
         assertEquals(2, dtos.size());
         assertEquals(p1.getId(), dtos.get(0).id());
         assertEquals(p2.getId(), dtos.get(1).id());
-        assertEquals("ACTIVE", dtos.get(0).status());
-        assertEquals("INACTIVE", dtos.get(1).status());
+        assertEquals(true, dtos.get(0).isActive());
+        assertEquals(false, dtos.get(1).isActive());
     }
 
     @Test
-    @DisplayName("Should map ProductDTO to Product correctly when status ACTIVE")
     void shouldMapDTOToProductActive() {
         // Given
         ProductDTO dto = new ProductDTO(
                 5L,
                 "N",
                 "Desc",
-                "55.55",
-                "7",
-                "ACTIVE",
-                "2025-06-08T19:00:00"
+                new BigDecimal("55.55"),
+                7L,
+                true,
+                LocalDateTime.of(2025,6, 8, 19,0,0)
         );
 
         // When
@@ -128,48 +125,4 @@ class ProductMapperTest {
         );
     }
 
-    @Test
-    @DisplayName("Should map ProductDTO to Product with inactive when status lowercase")
-    void shouldMapDTOToProductInactiveLowercase() {
-        // Given
-        ProductDTO dto = new ProductDTO(
-                6L,
-                "M",
-                "D",
-                "0.00",
-                "0",
-                "inactive",
-                "2025-06-08T19:00:00"
-        );
-
-        // When
-        Product product = mapper.toProduct(dto);
-
-        // Then
-        assertFalse(product.isActive());
-    }
-
-    @Test
-    @DisplayName("Should throw NumberFormatException for invalid quantity or price")
-    void shouldThrowForInvalidDTOValues() {
-        // Given
-        ProductDTO badPrice = new ProductDTO(1L,
-                "A",
-                "B",
-                "abc",
-                "1",
-                "ACTIVE",
-                "");
-        ProductDTO badQuantity = new ProductDTO(1L,
-                "A",
-                "B",
-                "1.00",
-                "xyz",
-                "ACTIVE",
-                "");
-
-        // Then
-        assertThrows(NumberFormatException.class, () -> mapper.toProduct(badPrice));
-        assertThrows(NumberFormatException.class, () -> mapper.toProduct(badQuantity));
-    }
 }

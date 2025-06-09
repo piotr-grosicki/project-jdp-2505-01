@@ -3,6 +3,9 @@ package com.kodilla.ecommercee.dto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ProductDTOTest {
@@ -14,13 +17,13 @@ class ProductDTOTest {
         Long id = 1L;
         String name = "Test Product";
         String description = "Description of test product";
-        String price = "19.99";
-        String quantity = "5";
-        String status = "AVAILABLE";
-        String createdAt = "2025-06-08T12:00:00";
+        BigDecimal price = new BigDecimal("19.99");
+        Long quantity = 5L;
+        Boolean isActive = true;
+        LocalDateTime createdAt = LocalDateTime.of(2025, 6, 8, 12, 0, 0);
 
         // When
-        ProductDTO dto = new ProductDTO(id, name, description, price, quantity, status, createdAt);
+        ProductDTO dto = new ProductDTO(id, name, description, price, quantity, isActive, createdAt);
 
         // Then
         assertAll("ProductDTO fields",
@@ -29,7 +32,7 @@ class ProductDTOTest {
                 () -> assertEquals(description, dto.description()),
                 () -> assertEquals(price, dto.price()),
                 () -> assertEquals(quantity, dto.quantity()),
-                () -> assertEquals(status, dto.status()),
+                () -> assertEquals(isActive, dto.isActive()),
                 () -> assertEquals(createdAt, dto.createdAt())
         );
     }
@@ -38,9 +41,29 @@ class ProductDTOTest {
     @DisplayName("Should correctly implement equals and hashCode")
     void shouldImplementEqualsAndHashCode() {
         // Given
-        ProductDTO dto1 = new ProductDTO(1L, "A", "Desc", "10.00", "2", "NEW", "2025-06-08T00:00:00");
-        ProductDTO dto2 = new ProductDTO(1L, "A", "Desc", "10.00", "2", "NEW", "2025-06-08T00:00:00");
-        ProductDTO dto3 = new ProductDTO(2L, "B", "Other", "5.00", "1", "OUT_OF_STOCK", "2025-06-07T23:59:59");
+        ProductDTO dto1 = new ProductDTO(1L,
+                "A",
+                "Desc",
+                new BigDecimal("10.00"),
+                2L,
+                true,
+                LocalDateTime.of(2025, 6, 8, 0, 0, 0));
+        ProductDTO dto2 = new ProductDTO(
+                1L,
+                "A",
+                "Desc",
+                new BigDecimal("10.00"),
+                2L,
+                true,
+                LocalDateTime.of(2025, 6, 8, 0, 0, 0));
+        ProductDTO dto3 = new ProductDTO(
+                2L,
+                "B",
+                "Other",
+                new BigDecimal("5.00"),
+                1L,
+                false,
+                LocalDateTime.of(2025, 6, 7, 23, 59, 0));
 
         // Then
         assertAll("equals and hashCode",
@@ -54,7 +77,14 @@ class ProductDTOTest {
     @DisplayName("toString should contain all field values")
     void toStringShouldContainAllFields() {
         // Given
-        ProductDTO dto = new ProductDTO(42L, "XYZ", "DescXYZ", "99.99", "10", "DISCONTINUED", "2025-06-01T08:30:00");
+        ProductDTO dto = new ProductDTO(
+                42L,
+                "XYZ",
+                "DescXYZ",
+                new BigDecimal("99.99"),
+                10L,
+                false,
+                LocalDateTime.of(2025, 6, 1, 8, 30, 0));
 
         // When
         String str = dto.toString();
@@ -66,8 +96,8 @@ class ProductDTOTest {
                 () -> assertTrue(str.contains("DescXYZ")),
                 () -> assertTrue(str.contains("99.99")),
                 () -> assertTrue(str.contains("10")),
-                () -> assertTrue(str.contains("DISCONTINUED")),
-                () -> assertTrue(str.contains("2025-06-01T08:30:00"))
+                () -> assertTrue(str.contains("false")),
+                () -> assertTrue(str.contains("2025-06-01T08:30"))
         );
     }
 }

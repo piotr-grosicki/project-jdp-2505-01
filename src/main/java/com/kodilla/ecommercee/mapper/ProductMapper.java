@@ -15,10 +15,10 @@ public class ProductMapper {
                 product.getId(),
                 product.getName(),
                 product.getDescription(),
-                product.getPrice().toString(),
-                product.getStockQuantity().toString(),
-                product.isActive() ? "ACTIVE" : "INACTIVE",
-                product.getCreatedAt().toString());
+                product.getPrice(),
+                product.getStockQuantity(),
+                product.isActive(),
+                product.getCreatedAt());
     }
 
     public List<ProductDTO> mapToProductDTOList(List<Product> products) {
@@ -27,10 +27,10 @@ public class ProductMapper {
                         product.getId(),
                         product.getName(),
                         product.getDescription(),
-                        product.getPrice().toString(),
-                        product.getStockQuantity().toString(),
-                        product.isActive() ? "ACTIVE" : "INACTIVE",
-                        product.getCreatedAt().toString()))
+                        product.getPrice(),
+                        product.getStockQuantity(),
+                        product.isActive(),
+                        product.getCreatedAt()))
                 .toList();
     }
 
@@ -39,9 +39,9 @@ public class ProductMapper {
                 .id(productDTO.id())
                 .name(productDTO.name())
                 .description(productDTO.description())
-                .price(new BigDecimal(productDTO.price()))
-                .stockQuantity(Long.parseLong(productDTO.quantity()))
-                .isActive("ACTIVE".equalsIgnoreCase(productDTO.status()))
+                .price(productDTO.price())
+                .stockQuantity(productDTO.quantity())
+                .isActive(productDTO.isActive())
                 .build();
     }
 }
