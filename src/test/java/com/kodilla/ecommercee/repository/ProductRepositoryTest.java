@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -64,7 +65,7 @@ class ProductRepositoryTest {
         productRepository.save(product2);
 
         // When
-        Iterable<Product> products = productRepository.findAll();
+        List<Product> products = productRepository.findAll();
 
         // Then
         try {
