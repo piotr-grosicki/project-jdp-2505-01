@@ -9,8 +9,15 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class GlobalHttpErrorHandler extends ResponseEntityExceptionHandler {
 
+
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<String> handleProductNotFoundException(ProductNotFoundException ex) {
         return new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);
+    }
+  
+    @ExceptionHandler(GroupNotFoundException.class)
+    public ResponseEntity<String> handleGroupNotFoundException(GroupNotFoundException ex) {
+        return new ResponseEntity<>("Group with provided id doesn't exist.", HttpStatus.NOT_FOUND);
+
     }
 }
