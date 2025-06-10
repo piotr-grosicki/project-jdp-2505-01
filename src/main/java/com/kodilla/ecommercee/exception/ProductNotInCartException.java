@@ -1,4 +1,4 @@
-package com.kodilla.ecommercee.exceptions;
+package com.kodilla.ecommercee.exception;
 
 public class ProductNotInCartException extends Exception {
 }
