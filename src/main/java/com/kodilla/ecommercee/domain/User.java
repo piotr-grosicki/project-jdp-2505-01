@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Builder
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "users")
@@ -31,18 +30,24 @@ public class User {
     @Column(name = "email")
     private String email;
 
+    @Setter
+    @Builder.Default
     @Column(name = "is_blocked")
-    private boolean isBlocked;
+    private boolean isBlocked = false;
 
+    @Setter
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Setter
     @Column(name = "token")
     private String token;
 
+    @Setter
     @Column(name = "token_created_at")
     private LocalDateTime tokenCreatedAt;
 
+    @Setter
     @Column(name = "token_expires_at")
     private LocalDateTime tokenExpiresAt;
 

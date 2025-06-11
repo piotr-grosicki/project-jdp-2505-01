@@ -1,14 +1,14 @@
 package com.kodilla.ecommercee.service;
 
 import com.kodilla.ecommercee.domain.User;
-import com.kodilla.ecommercee.exception.UserNotFoundException;
+import com.kodilla.ecommercee.exception.UserNotFoundByIdException;
 import com.kodilla.ecommercee.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-
+import com.kodilla.ecommercee.exception.UserNotFoundByMailException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -40,7 +40,7 @@ class UserServiceTest {
     }
 
     @Test
-    void shouldReturnUserById() throws UserNotFoundException {
+    void shouldReturnUserById() throws UserNotFoundByIdException {
         when(repository.findById(1L)).thenReturn(Optional.of(user));
         User result = service.getUser(1L);
         assertThat(result.getLastName()).isEqualTo("Nowak");
@@ -50,11 +50,11 @@ class UserServiceTest {
     void shouldThrowWhenUserNotFound() {
         when(repository.findById(99L)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> service.getUser(99L))
-                .isInstanceOf(UserNotFoundException.class);
+                .isInstanceOf(UserNotFoundByIdException.class);
     }
 
     @Test
-    void shouldReturnUserByEmail() throws UserNotFoundException {
+    void shouldReturnUserByEmail() throws UserNotFoundByMailException {
         when(repository.findByEmail("adam@nowak.pl")).thenReturn(Optional.of(user));
         User result = service.getUserByEmail("adam@nowak.pl");
         assertThat(result.getId()).isEqualTo(1L);
@@ -69,7 +69,7 @@ class UserServiceTest {
     }
 
     @Test
-    void shouldBlockUser() throws UserNotFoundException {
+    void shouldBlockUser() throws UserNotFoundByIdException {
         when(repository.findById(1L)).thenReturn(Optional.of(user));
         when(repository.save(any(User.class))).thenAnswer(i -> i.getArgument(0));
         User blocked = service.blockUser(1L);
@@ -77,7 +77,7 @@ class UserServiceTest {
     }
 
     @Test
-    void shouldGenerateKey() throws UserNotFoundException {
+    void shouldGenerateKey() throws UserNotFoundByIdException {
         when(repository.findById(1L)).thenReturn(Optional.of(user));
         when(repository.save(any(User.class))).thenAnswer(i -> i.getArgument(0));
         User withKey = service.generateKey(1L);

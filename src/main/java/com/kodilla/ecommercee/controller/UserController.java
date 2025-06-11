@@ -2,7 +2,7 @@ package com.kodilla.ecommercee.controller;
 
 import com.kodilla.ecommercee.domain.User;
 import com.kodilla.ecommercee.dto.UserDTO;
-import com.kodilla.ecommercee.exception.UserNotFoundException;
+import com.kodilla.ecommercee.exception.UserNotFoundByIdException;
 import com.kodilla.ecommercee.mapper.UserMapper;
 import com.kodilla.ecommercee.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserDTO> getUser(@PathVariable Long userId)
-            throws UserNotFoundException {
+            throws UserNotFoundByIdException {
         User user = userService.getUser(userId);
         return ResponseEntity.ok(userMapper.toDto(user));
     }
@@ -42,7 +42,7 @@ public class UserController {
 
     @PutMapping
     public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO dto)
-            throws UserNotFoundException {
+            throws UserNotFoundByIdException {
         User user = userMapper.toEntity(dto);
         User updated = userService.updateUser(user);
         return ResponseEntity.ok(userMapper.toDto(updated));
@@ -50,21 +50,21 @@ public class UserController {
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long userId)
-            throws UserNotFoundException {
+            throws UserNotFoundByIdException {
         userService.deleteUser(userId);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/block/{userId}")
     public ResponseEntity<UserDTO> blockUser(@PathVariable Long userId)
-            throws UserNotFoundException {
+            throws UserNotFoundByIdException {
         User blocked = userService.blockUser(userId);
         return ResponseEntity.ok(userMapper.toDto(blocked));
     }
 
     @PostMapping("/{userId}/keys")
     public ResponseEntity<UserDTO> generateKey(@PathVariable Long userId)
-            throws UserNotFoundException {
+            throws UserNotFoundByIdException {
         User updated = userService.generateKey(userId);
         return ResponseEntity.ok(userMapper.toDto(updated));
     }
