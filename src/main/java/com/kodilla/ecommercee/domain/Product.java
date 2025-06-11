@@ -1,10 +1,7 @@
 package com.kodilla.ecommercee.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -22,14 +19,19 @@ public class Product {
     @Id
     @GeneratedValue
     private Long id;
+    @Setter
     @Column(name = "name")
     private String name;
+    @Setter
     @Column(name = "price")
     private BigDecimal price;
+    @Setter
     @Column(name = "description")
     private String description;
+    @Setter
     @Column(name = "stock_quantity")
     private Long stockQuantity;
+    @Setter
     @Column(name = "is_active")
     private boolean isActive;
     @Column(name = "created_at")
