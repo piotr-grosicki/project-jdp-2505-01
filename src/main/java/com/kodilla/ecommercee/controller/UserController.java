@@ -1,6 +1,9 @@
 package com.kodilla.ecommercee.controller;
 
+import com.kodilla.ecommercee.domain.User;
 import com.kodilla.ecommercee.dto.UserDTO;
+import com.kodilla.ecommercee.exception.UserNotFoundException;
+import com.kodilla.ecommercee.mapper.UserMapper;
 import com.kodilla.ecommercee.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -9,50 +12,60 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/users")
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/users")
 public class UserController {
 
     private final UserService userService;
+    private final UserMapper userMapper;
+
 
     @GetMapping
-    public ResponseEntity<List<UserDTO.UserDto>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        return ResponseEntity.ok(userMapper.mapToDtoList(users));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserDTO.UserDto> getUserById(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.getUserById(id));
-    }
-
-    @GetMapping("/email")
-    public ResponseEntity<UserDTO.UserDto> getUserByEmail(@RequestParam String email) {
-        return ResponseEntity.ok(userService.getUserByEmail(email));
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserDTO> getUser(@PathVariable Long userId)
+            throws UserNotFoundException {
+        User user = userService.getUser(userId);
+        return ResponseEntity.ok(userMapper.toDto(user));
     }
 
     @PostMapping
-    public ResponseEntity<UserDTO.UserDto> createUser(@RequestBody UserDTO.UserDto dto) {
-        return ResponseEntity.ok(userService.createUser(dto));
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO dto) {
+        User user = userMapper.toEntity(dto);
+        User created = userService.createUser(user);
+        return ResponseEntity.ok(userMapper.toDto(created));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<UserDTO.UserDto> updateUser(@PathVariable Long id, @RequestBody UserDTO.UserDto dto) {
-        return ResponseEntity.ok(userService.updateUser(id, dto));
+    @PutMapping
+    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO dto)
+            throws UserNotFoundException {
+        User user = userMapper.toEntity(dto);
+        User updated = userService.updateUser(user);
+        return ResponseEntity.ok(userMapper.toDto(updated));
     }
 
-    @PatchMapping("/{id}/block")
-    public ResponseEntity<UserDTO.UserDto> blockUser(@PathVariable Long id, @RequestParam boolean isBlocked) {
-        return ResponseEntity.ok(userService.blockUser(id, isBlocked));
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long userId)
+            throws UserNotFoundException {
+        userService.deleteUser(userId);
+        return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{id}/token")
-    public ResponseEntity<UserDTO.Token> generateToken(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.generateToken(id));
+    @PutMapping("/block/{userId}")
+    public ResponseEntity<UserDTO> blockUser(@PathVariable Long userId)
+            throws UserNotFoundException {
+        User blocked = userService.blockUser(userId);
+        return ResponseEntity.ok(userMapper.toDto(blocked));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
-        return ResponseEntity.noContent().build();
+    @PostMapping("/{userId}/keys")
+    public ResponseEntity<UserDTO> generateKey(@PathVariable Long userId)
+            throws UserNotFoundException {
+        User updated = userService.generateKey(userId);
+        return ResponseEntity.ok(userMapper.toDto(updated));
     }
 }
