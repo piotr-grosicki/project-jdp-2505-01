@@ -32,6 +32,9 @@ public class UserService {
     }
 
     public User createUser(User user) {
+        user.setEmail(user.getEmail());
+        user.setFirstName(user.getFirstName());
+        user.setLastName(user.getLastName());
         return userRepository.save(user);
     }
 
