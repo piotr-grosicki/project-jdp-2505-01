@@ -9,13 +9,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalHttpErrorHandler {
 
     @ExceptionHandler(UserNotFoundByIdException.class)
-    public ResponseEntity<String> handleUserNotFound(UserNotFoundByIdException ex) {
+    public ResponseEntity<String> handleUserNotFoundById(UserNotFoundByIdException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleGeneralException(Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("An unexpected error occurred: " + ex.getMessage());
+    @ExceptionHandler(UserNotFoundByMailException.class)
+    public ResponseEntity<String> handleUserNotFoundByMail(Exception ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
 }
