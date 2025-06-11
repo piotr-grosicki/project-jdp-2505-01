@@ -30,7 +30,6 @@ public class OrderService {
     }
 
     public Order createOrder(Order order) {
-        order.setCreatedAt(LocalDateTime.now());
         order.setStatus(OrderStatusEnum.NEW);
         return orderRepository.save(order);
     }
@@ -41,8 +40,6 @@ public class OrderService {
         existing.setStatus(order.getStatus());
         existing.setTotalAmount(order.getTotalAmount());
         existing.setProducts(order.getProducts());
-        existing.setUser(order.getUser());
-        existing.setCart(order.getCart());
         return orderRepository.save(existing);
     }
 
