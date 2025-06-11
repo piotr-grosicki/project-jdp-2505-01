@@ -17,7 +17,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
 
     public List<Order> getAllOrders() {
-        return (List<Order>) orderRepository.findAll();
+        return orderRepository.findAll();
     }
 
     public List<Order> getOrdersByStatus(OrderStatusEnum status) {
@@ -31,9 +31,7 @@ public class OrderService {
 
     public Order createOrder(Order order) {
         order.setCreatedAt(LocalDateTime.now());
-        if (order.getStatus() == null) {
-            order.setStatus(OrderStatusEnum.NEW);
-        }
+        order.setStatus(OrderStatusEnum.NEW);
         return orderRepository.save(order);
     }
 
