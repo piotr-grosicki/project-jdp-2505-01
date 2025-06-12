@@ -24,12 +24,14 @@ public class Cart {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Builder.Default
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "cart_has_product",
             joinColumns = @JoinColumn(name = "cart_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
+    @Column(name = "products")
     private List<Product> products = new ArrayList<>();
 
     @ManyToOne

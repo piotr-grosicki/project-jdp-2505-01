@@ -5,11 +5,13 @@ import com.kodilla.ecommercee.exception.CartNotFoundException;
 import com.kodilla.ecommercee.exception.ProductNotFoundException;
 import com.kodilla.ecommercee.exception.ProductNotInCartException;
 import com.kodilla.ecommercee.repository.CartRepository;
+import com.kodilla.ecommercee.repository.OrderRepository;
 import com.kodilla.ecommercee.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +21,7 @@ public class CartService {
 
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
+    private final OrderRepository orderRepository;
 
     public Cart createEmptyCart() {
         Cart cart = Cart.builder()
@@ -59,12 +62,14 @@ public class CartService {
     public Order convertCartToOrder(Long cartId) throws CartNotFoundException {
         Cart existingCart = cartRepository.findById(cartId)
                 .orElseThrow(CartNotFoundException::new);
-        return Order.builder()
+        Order newOrder = Order.builder()
                 .cart(existingCart)
                 .user(existingCart.getUser())
                 .status(OrderStatusEnum.NEW)
                 .createdAt(LocalDateTime.now())
+                .products(new ArrayList<>(existingCart.getProducts()))
                 .build();
+        return orderRepository.save(newOrder);
     }
 
 }

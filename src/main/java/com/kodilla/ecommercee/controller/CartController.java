@@ -4,11 +4,13 @@ import com.kodilla.ecommercee.domain.Cart;
 import com.kodilla.ecommercee.domain.Order;
 import com.kodilla.ecommercee.domain.Product;
 import com.kodilla.ecommercee.dto.CartDTO;
+import com.kodilla.ecommercee.dto.OrderDTO;
 import com.kodilla.ecommercee.dto.ProductDTO;
 import com.kodilla.ecommercee.exception.CartNotFoundException;
 import com.kodilla.ecommercee.exception.ProductNotFoundException;
 import com.kodilla.ecommercee.exception.ProductNotInCartException;
 import com.kodilla.ecommercee.mapper.CartMapper;
+import com.kodilla.ecommercee.mapper.OrderMapper;
 import com.kodilla.ecommercee.mapper.ProductMapper;
 import com.kodilla.ecommercee.service.CartService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ public class CartController {
 
     private final CartService cartService;
     private final CartMapper cartMapper;
+    private final OrderMapper orderMapper;
 
     private final ProductMapper productMapper;
 
@@ -57,9 +60,9 @@ public class CartController {
     }
 
     @PostMapping("/{cartId}/orders")
-    public ResponseEntity<Order> convertCartToOrder(@PathVariable Long cartId)
+    public ResponseEntity<OrderDTO> convertCartToOrder(@PathVariable Long cartId)
             throws CartNotFoundException {
         Order order = cartService.convertCartToOrder(cartId);
-        return ResponseEntity.ok(order);
+        return ResponseEntity.ok(orderMapper.toDto(order));
     }
 }
