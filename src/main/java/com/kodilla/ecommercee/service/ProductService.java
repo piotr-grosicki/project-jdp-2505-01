@@ -1,6 +1,7 @@
 package com.kodilla.ecommercee.service;
 
 import com.kodilla.ecommercee.domain.Product;
+import com.kodilla.ecommercee.exception.CartNotFoundException;
 import com.kodilla.ecommercee.exception.ProductNotFoundException;
 import com.kodilla.ecommercee.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class ProductService {
 
     public Product getProduct(Long productId) throws ProductNotFoundException {
         return productRepository.findById(productId)
-                .orElseThrow(ProductNotFoundException::new);
+                .orElseThrow(() -> new ProductNotFoundException(productId));
     }
 
     public Product createProduct(Product product) {
@@ -38,7 +39,7 @@ public class ProductService {
 
     public Product updateProduct(Product product) throws ProductNotFoundException {
         Product existingProduct = productRepository.findById(product.getId())
-                .orElseThrow(ProductNotFoundException::new);
+                .orElseThrow(() -> new ProductNotFoundException(product.getId()));
         existingProduct.setName(product.getName());
         existingProduct.setDescription(product.getDescription());
         existingProduct.setPrice(product.getPrice());
@@ -49,7 +50,7 @@ public class ProductService {
 
     public void deleteProduct(Long productId) throws  ProductNotFoundException {
         if (!productRepository.existsById(productId))
-                throw new ProductNotFoundException();
+                throw new ProductNotFoundException(productId);
         productRepository.deleteById(productId);
     }
 }
