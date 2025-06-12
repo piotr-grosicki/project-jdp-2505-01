@@ -30,21 +30,18 @@ public class UserService {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundByMailException(email));
     }
-
+    @Transactional
     public User createUser(User user) {
-        user.setEmail(user.getEmail());
-        user.setFirstName(user.getFirstName());
-        user.setLastName(user.getLastName());
         return userRepository.save(user);
     }
-
+    @Transactional
     public User updateUser(User user) throws UserNotFoundByIdException {
         if (!userRepository.existsById(user.getId())) {
             throw new UserNotFoundByIdException(user.getId());
         }
         return userRepository.save(user);
     }
-
+    @Transactional
     public void deleteUser(Long id) throws UserNotFoundByIdException {
         if (!userRepository.existsById(id)) {
             throw new UserNotFoundByIdException(id);
