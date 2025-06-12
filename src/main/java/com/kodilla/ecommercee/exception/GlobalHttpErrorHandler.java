@@ -20,4 +20,9 @@ public class GlobalHttpErrorHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>("Group with provided id doesn't exist.", HttpStatus.NOT_FOUND);
 
     }
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<String> handleOrderNotFoundException(OrderNotFoundException ex) {
+        return new ResponseEntity<>("Order with provided id: " + ex.getMessage()
+                + " doesn't exist", HttpStatus.NOT_FOUND);
+    }
 }

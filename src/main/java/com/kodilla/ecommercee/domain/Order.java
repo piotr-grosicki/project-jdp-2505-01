@@ -1,10 +1,7 @@
 package com.kodilla.ecommercee.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -23,15 +20,18 @@ public class Order {
     @GeneratedValue
     private Long id;
 
+    @Setter
     @Column(name = "status")
     private OrderStatusEnum status;
 
+    @Setter
     @Column(name = "total_amount")
     private BigDecimal totalAmount;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Setter
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "order_has_product",
@@ -43,6 +43,7 @@ public class Order {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id")
