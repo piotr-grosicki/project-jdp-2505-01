@@ -12,5 +12,5 @@ import java.util.Optional;
 @Transactional
 public interface OrderRepository extends CrudRepository<Order, Long> {
     Optional<List<Order>> findAllByStatus(OrderStatusEnum status);
-
+    List<Order> findAll();
 }

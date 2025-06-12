@@ -18,8 +18,10 @@ public class User {
     @GeneratedValue
     private Long id;
 
+
     @Column(name = "first_name")
     private String firstName;
+
 
     @Column(name = "last_name")
     private String lastName;
@@ -30,18 +32,23 @@ public class User {
     @Column(name = "email")
     private String email;
 
+    @Setter
+    @Builder.Default
     @Column(name = "is_blocked")
-    private boolean isBlocked;
+    private boolean isBlocked = false;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Setter
     @Column(name = "token")
     private String token;
 
+    @Setter
     @Column(name = "token_created_at")
     private LocalDateTime tokenCreatedAt;
 
+    @Setter
     @Column(name = "token_expires_at")
     private LocalDateTime tokenExpiresAt;
 

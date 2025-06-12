@@ -9,15 +9,32 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class GlobalHttpErrorHandler extends ResponseEntityExceptionHandler {
 
+    @ExceptionHandler(UserNotFoundByIdException.class)
+    public ResponseEntity<String> handleUserNotFoundById(UserNotFoundByIdException ex) {
+        return new ResponseEntity<>("User with provided id:" + ex.getMessage()
+                + " doesn't exist", HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UserNotFoundByMailException.class)
+    public ResponseEntity<String> handleUserNotFoundByMail(UserNotFoundByMailException ex) {
+        return new ResponseEntity<>("User with provided email:" + ex.getMessage()
+                + " doesn't exist", HttpStatus.NOT_FOUND);
+    }
 
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<String> handleProductNotFoundException(ProductNotFoundException ex) {
         return new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);
     }
-  
+
     @ExceptionHandler(GroupNotFoundException.class)
     public ResponseEntity<String> handleGroupNotFoundException(GroupNotFoundException ex) {
         return new ResponseEntity<>("Group with provided id doesn't exist.", HttpStatus.NOT_FOUND);
 
     }
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<String> handleOrderNotFoundException(OrderNotFoundException ex) {
+        return new ResponseEntity<>("Order with provided id: " + ex.getMessage()
+                + " doesn't exist", HttpStatus.NOT_FOUND);
+    }
 }
+
