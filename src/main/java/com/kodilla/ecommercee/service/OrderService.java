@@ -26,7 +26,7 @@ public class OrderService {
 
     public Order getOrder(Long id) throws OrderNotFoundException {
         return orderRepository.findById(id)
-                .orElseThrow(() -> new OrderNotFoundException());
+                .orElseThrow(() -> new OrderNotFoundException(id));
     }
 
     public Order createOrder(Order order) {
@@ -36,7 +36,7 @@ public class OrderService {
 
     public Order updateOrder(Order order) throws OrderNotFoundException {
         Order existing = orderRepository.findById(order.getId())
-                .orElseThrow(() -> new OrderNotFoundException());
+                .orElseThrow(() -> new OrderNotFoundException(order.getId()));
         existing.setStatus(order.getStatus());
         existing.setTotalAmount(order.getTotalAmount());
         existing.setProducts(order.getProducts());
@@ -45,7 +45,7 @@ public class OrderService {
 
     public void deleteOrder(Long id) throws OrderNotFoundException {
         if (!orderRepository.existsById(id)) {
-            throw new OrderNotFoundException();
+            throw new OrderNotFoundException(id);
         }
         orderRepository.deleteById(id);
     }
