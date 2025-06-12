@@ -1,36 +1,68 @@
 package com.kodilla.ecommercee.controller;
 
+import com.kodilla.ecommercee.domain.Cart;
+import com.kodilla.ecommercee.domain.Order;
+import com.kodilla.ecommercee.domain.Product;
+import com.kodilla.ecommercee.dto.CartDTO;
+import com.kodilla.ecommercee.dto.OrderDTO;
+import com.kodilla.ecommercee.dto.ProductDTO;
+import com.kodilla.ecommercee.exception.CartNotFoundException;
+import com.kodilla.ecommercee.exception.ProductNotFoundException;
+import com.kodilla.ecommercee.exception.ProductNotInCartException;
+import com.kodilla.ecommercee.mapper.CartMapper;
+import com.kodilla.ecommercee.mapper.OrderMapper;
+import com.kodilla.ecommercee.mapper.ProductMapper;
+import com.kodilla.ecommercee.service.CartService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/carts")
 public class CartController {
 
+    private final CartService cartService;
+    private final CartMapper cartMapper;
+    private final OrderMapper orderMapper;
+
+    private final ProductMapper productMapper;
+
     @PostMapping
-    public ResponseEntity<Void> createEmptyCart() {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<CartDTO> createEmptyCart() {
+        CartDTO cartDto = cartMapper.mapToCartDto(cartService.createEmptyCart());
+        return ResponseEntity.ok(cartDto);
     }
 
     @GetMapping("/{cartId}")
-    public ResponseEntity<String> getCartContents(@PathVariable Long cartId) {
-        return ResponseEntity.ok("Cart Content: " + cartId);
+    public ResponseEntity<List<ProductDTO>> getCartContents(@PathVariable Long cartId)
+            throws CartNotFoundException {
+        List<Product> cartContents = cartService.getCartContents(cartId);
+        return ResponseEntity.ok(productMapper.mapToProductDTOList(cartContents));
     }
 
     @PostMapping("/{cartId}/products/{productId}")
-    public ResponseEntity<String> addProductToCart(
-            @PathVariable Long cartId, @PathVariable Long productId) {
-        return ResponseEntity.ok("Product added to cart:" + productId);
+    public ResponseEntity<CartDTO> addProductToCart(
+            @PathVariable Long cartId, @PathVariable Long productId)
+            throws CartNotFoundException, ProductNotFoundException {
+        Cart cart = cartService.addProductToCart(cartId, productId);
+        return ResponseEntity.ok(cartMapper.mapToCartDto(cart));
     }
 
     @DeleteMapping("/{cartId}/products/{productId}")
-    public ResponseEntity<Void> removeProductFromCart(
-            @PathVariable Long cartId, @PathVariable Long productId) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<CartDTO> removeProductFromCart(
+            @PathVariable Long cartId, @PathVariable Long productId)
+            throws CartNotFoundException, ProductNotFoundException, ProductNotInCartException {
+        Cart cart = cartService.removeProductFromCart(cartId, productId);
+        return ResponseEntity.ok(cartMapper.mapToCartDto(cart));
     }
 
     @PostMapping("/{cartId}/orders")
-    public ResponseEntity<String> convertCartToOrder(@PathVariable Long cartId) {
-        return ResponseEntity.ok("Created order: " + cartId);
+    public ResponseEntity<OrderDTO> convertCartToOrder(@PathVariable Long cartId)
+            throws CartNotFoundException {
+        Order order = cartService.convertCartToOrder(cartId);
+        return ResponseEntity.ok(orderMapper.toDto(order));
     }
 }
