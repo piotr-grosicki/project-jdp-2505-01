@@ -30,17 +30,37 @@ public class UserService {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundByMailException(email));
     }
+
     @Transactional
     public User createUser(User user) {
-        return userRepository.save(user);
+        User newUser = User.builder()
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .passwordHash(user.getPasswordHash())
+                .email(user.getEmail())
+                .createdAt(LocalDateTime.now())
+                .token(UUID.randomUUID().toString())
+                .tokenCreatedAt(LocalDateTime.now())
+                .tokenExpiresAt(LocalDateTime.now().plusHours(1))
+                .build();
+        return userRepository.save(newUser);
     }
+
     @Transactional
     public User updateUser(User user) throws UserNotFoundByIdException {
-        if (!userRepository.existsById(user.getId())) {
-            throw new UserNotFoundByIdException(user.getId());
+        User editedUser = getUser(user.getId());
+        if (user.getFirstName() != null) {
+            editedUser.setFirstName(user.getFirstName());
         }
-        return userRepository.save(user);
+        if (user.getLastName() != null) {
+            editedUser.setLastName(user.getLastName());
+        }
+        if (user.getEmail() != null) {
+            editedUser.setEmail(user.getEmail());
+        }
+        return userRepository.save(editedUser);
     }
+
     @Transactional
     public void deleteUser(Long id) throws UserNotFoundByIdException {
         if (!userRepository.existsById(id)) {
