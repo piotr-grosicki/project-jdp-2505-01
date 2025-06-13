@@ -2,7 +2,7 @@ package com.kodilla.ecommercee.service;
 
 import com.kodilla.ecommercee.domain.Order;
 import com.kodilla.ecommercee.domain.OrderStatusEnum;
-import com.kodilla.ecommercee.exception.OrderNotFoundException;
+import com.kodilla.ecommercee.exception.OrderNotFoundByIdException;
 import com.kodilla.ecommercee.repository.OrderRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,7 +46,7 @@ class OrderServiceTest {
     void shouldThrowWhenGettingNonExisting() {
         when(repo.findById(2L)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> service.getOrder(2L))
-                .isInstanceOf(OrderNotFoundException.class);
+                .isInstanceOf(OrderNotFoundByIdException.class);
     }
 
     @Test
@@ -64,7 +64,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void shouldUpdateExistingOrder() throws OrderNotFoundException {
+    void shouldUpdateExistingOrder() throws OrderNotFoundByIdException {
         Order updated = Order.builder().id(1L).status(OrderStatusEnum.CANCELLED).build();
         when(repo.findById(1L)).thenReturn(Optional.of(order));
         when(repo.save(any(Order.class))).thenReturn(updated);
@@ -73,7 +73,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void shouldDeleteOrder() throws OrderNotFoundException {
+    void shouldDeleteOrder() throws OrderNotFoundByIdException {
         when(repo.existsById(1L)).thenReturn(true);
         service.deleteOrder(1L);
         verify(repo).deleteById(1L);

@@ -1,9 +1,8 @@
 package com.kodilla.ecommercee.service;
 
 import com.kodilla.ecommercee.domain.*;
-import com.kodilla.ecommercee.exception.CartNotFoundException;
-import com.kodilla.ecommercee.exception.OrderNotFoundException;
-import com.kodilla.ecommercee.exception.ProductNotFoundException;
+import com.kodilla.ecommercee.exception.CartNotFoundByIdException;
+import com.kodilla.ecommercee.exception.ProductNotFoundByIdException;
 import com.kodilla.ecommercee.exception.ProductNotInCartException;
 import com.kodilla.ecommercee.repository.CartRepository;
 import com.kodilla.ecommercee.repository.OrderRepository;
@@ -32,37 +31,37 @@ public class CartService {
         return cartRepository.save(cart);
     }
 
-    public List<Product> getCartContents(Long cartId) throws CartNotFoundException {
+    public List<Product> getCartContents(Long cartId) throws CartNotFoundByIdException {
         Cart existingCart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new CartNotFoundException(cartId));
+                .orElseThrow(() -> new CartNotFoundByIdException(cartId));
         return existingCart.getProducts();
     }
 
     public Cart addProductToCart(Long cartId, Long productId)
-            throws CartNotFoundException, ProductNotFoundException {
+            throws CartNotFoundByIdException, ProductNotFoundByIdException {
         Cart existingCart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new CartNotFoundException(cartId));
+                .orElseThrow(() -> new CartNotFoundByIdException(cartId));
         Product existingProduct = productRepository.findById(productId)
-                .orElseThrow(() -> new ProductNotFoundException(productId));
+                .orElseThrow(() -> new ProductNotFoundByIdException(productId));
         existingCart.getProducts().add(existingProduct);
         return cartRepository.save(existingCart);
     }
 
     public Cart removeProductFromCart(Long cartId, Long productId)
-            throws CartNotFoundException, ProductNotFoundException, ProductNotInCartException {
+            throws CartNotFoundByIdException, ProductNotFoundByIdException, ProductNotInCartException {
         Cart existingCart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new CartNotFoundException(cartId));
+                .orElseThrow(() -> new CartNotFoundByIdException(cartId));
         Product existingProduct = productRepository.findById(productId)
-                .orElseThrow(() -> new ProductNotFoundException(productId));
+                .orElseThrow(() -> new ProductNotFoundByIdException(productId));
         Optional.of(existingCart.getProducts())
                 .filter(products -> products.remove(existingProduct))
                 .orElseThrow(() -> new ProductNotInCartException(productId));
         return cartRepository.save(existingCart);
     }
 
-    public Order convertCartToOrder(Long cartId) throws CartNotFoundException {
+    public Order convertCartToOrder(Long cartId) throws CartNotFoundByIdException {
         Cart existingCart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new CartNotFoundException(cartId));
+                .orElseThrow(() -> new CartNotFoundByIdException(cartId));
         Order newOrder = Order.builder()
                 .cart(existingCart)
                 .user(existingCart.getUser())

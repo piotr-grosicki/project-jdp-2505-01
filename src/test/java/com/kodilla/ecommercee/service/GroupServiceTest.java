@@ -1,7 +1,7 @@
 package com.kodilla.ecommercee.service;
 
 import com.kodilla.ecommercee.domain.Group;
-import com.kodilla.ecommercee.exception.GroupNotFoundException;
+import com.kodilla.ecommercee.exception.GroupNotFoundByIdException;
 import com.kodilla.ecommercee.repository.GroupRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -83,7 +83,7 @@ class GroupServiceTest {
     }
 
     @Test
-    void shouldGetGroupById() throws GroupNotFoundException {
+    void shouldGetGroupById() throws GroupNotFoundByIdException {
         // Given
         Group g = Group.builder()
                 .id(10L)
@@ -108,12 +108,12 @@ class GroupServiceTest {
 
         // When & Then
         assertThatThrownBy(() -> groupService.getGroupById(99L))
-                .isInstanceOf(GroupNotFoundException.class);
+                .isInstanceOf(GroupNotFoundByIdException.class);
         verify(groupRepository).findById(99L);
     }
 
     @Test
-    void shouldUpdateGroup() throws GroupNotFoundException {
+    void shouldUpdateGroup() throws GroupNotFoundByIdException {
         // Given
         LocalDateTime origTime = LocalDateTime.of(2025, 1, 1, 0, 0);
         Group existing = Group.builder()
@@ -165,7 +165,7 @@ class GroupServiceTest {
 
         // When & Then
         assertThatThrownBy(() -> groupService.updateGroup(123L, updateData))
-                .isInstanceOf(GroupNotFoundException.class);
+                .isInstanceOf(GroupNotFoundByIdException.class);
         verify(groupRepository).findById(123L);
         verify(groupRepository, never()).save(any());
     }

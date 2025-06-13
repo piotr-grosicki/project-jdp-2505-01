@@ -1,7 +1,7 @@
 package com.kodilla.ecommercee.service;
 
 import com.kodilla.ecommercee.domain.Product;
-import com.kodilla.ecommercee.exception.ProductNotFoundException;
+import com.kodilla.ecommercee.exception.ProductNotFoundByIdException;
 import com.kodilla.ecommercee.repository.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -49,7 +49,7 @@ class ProductServiceTest {
 
     @Test
     @DisplayName("Should return product when found by id")
-    void shouldReturnProductById() throws ProductNotFoundException {
+    void shouldReturnProductById() throws ProductNotFoundByIdException {
         // Given
         Product p = Product.builder().id(1L).name("A").build();
         when(productRepository.findById(1L)).thenReturn(Optional.of(p));
@@ -69,7 +69,7 @@ class ProductServiceTest {
         when(productRepository.findById(1L)).thenReturn(Optional.empty());
 
         // When / Then
-        assertThrows(ProductNotFoundException.class, () -> productService.getProduct(1L));
+        assertThrows(ProductNotFoundByIdException.class, () -> productService.getProduct(1L));
         verify(productRepository, times(1)).findById(1L);
     }
 
@@ -97,7 +97,7 @@ class ProductServiceTest {
 
     @Test
     @DisplayName("Should update existing product when found")
-    void shouldUpdateExistingProduct() throws ProductNotFoundException {
+    void shouldUpdateExistingProduct() throws ProductNotFoundByIdException {
         // Given
         Product existing = Product.builder()
                 .id(1L)
@@ -137,14 +137,14 @@ class ProductServiceTest {
         when(productRepository.findById(1L)).thenReturn(Optional.empty());
 
         // When / Then
-        assertThrows(ProductNotFoundException.class, () -> productService.updateProduct(update));
+        assertThrows(ProductNotFoundByIdException.class, () -> productService.updateProduct(update));
         verify(productRepository, times(1)).findById(1L);
         verify(productRepository, never()).save(any());
     }
 
     @Test
     @DisplayName("Should delete product when it exists")
-    void shouldDeleteWhenExists() throws ProductNotFoundException {
+    void shouldDeleteWhenExists() throws ProductNotFoundByIdException {
         // Given
         when(productRepository.existsById(1L)).thenReturn(true);
 
@@ -163,7 +163,7 @@ class ProductServiceTest {
         when(productRepository.existsById(1L)).thenReturn(false);
 
         // When / Then
-        assertThrows(ProductNotFoundException.class, () -> productService.deleteProduct(1L));
+        assertThrows(ProductNotFoundByIdException.class, () -> productService.deleteProduct(1L));
         verify(productRepository, times(1)).existsById(1L);
         verify(productRepository, never()).deleteById(any());
     }

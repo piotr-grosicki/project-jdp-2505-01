@@ -6,8 +6,8 @@ import com.kodilla.ecommercee.domain.Product;
 import com.kodilla.ecommercee.dto.CartDTO;
 import com.kodilla.ecommercee.dto.OrderDTO;
 import com.kodilla.ecommercee.dto.ProductDTO;
-import com.kodilla.ecommercee.exception.CartNotFoundException;
-import com.kodilla.ecommercee.exception.ProductNotFoundException;
+import com.kodilla.ecommercee.exception.CartNotFoundByIdException;
+import com.kodilla.ecommercee.exception.ProductNotFoundByIdException;
 import com.kodilla.ecommercee.exception.ProductNotInCartException;
 import com.kodilla.ecommercee.mapper.CartMapper;
 import com.kodilla.ecommercee.mapper.OrderMapper;
@@ -38,7 +38,7 @@ public class CartController {
 
     @GetMapping("/{cartId}")
     public ResponseEntity<List<ProductDTO>> getCartContents(@PathVariable Long cartId)
-            throws CartNotFoundException {
+            throws CartNotFoundByIdException {
         List<Product> cartContents = cartService.getCartContents(cartId);
         return ResponseEntity.ok(productMapper.mapToProductDTOList(cartContents));
     }
@@ -46,7 +46,7 @@ public class CartController {
     @PostMapping("/{cartId}/products/{productId}")
     public ResponseEntity<CartDTO> addProductToCart(
             @PathVariable Long cartId, @PathVariable Long productId)
-            throws CartNotFoundException, ProductNotFoundException {
+            throws CartNotFoundByIdException, ProductNotFoundByIdException {
         Cart cart = cartService.addProductToCart(cartId, productId);
         return ResponseEntity.ok(cartMapper.mapToCartDto(cart));
     }
@@ -54,14 +54,14 @@ public class CartController {
     @DeleteMapping("/{cartId}/products/{productId}")
     public ResponseEntity<CartDTO> removeProductFromCart(
             @PathVariable Long cartId, @PathVariable Long productId)
-            throws CartNotFoundException, ProductNotFoundException, ProductNotInCartException {
+            throws CartNotFoundByIdException, ProductNotFoundByIdException, ProductNotInCartException {
         Cart cart = cartService.removeProductFromCart(cartId, productId);
         return ResponseEntity.ok(cartMapper.mapToCartDto(cart));
     }
 
     @PostMapping("/{cartId}/orders")
     public ResponseEntity<OrderDTO> convertCartToOrder(@PathVariable Long cartId)
-            throws CartNotFoundException {
+            throws CartNotFoundByIdException {
         Order order = cartService.convertCartToOrder(cartId);
         return ResponseEntity.ok(orderMapper.toDto(order));
     }

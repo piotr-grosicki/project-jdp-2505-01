@@ -2,14 +2,13 @@ package com.kodilla.ecommercee.controller;
 
 import com.kodilla.ecommercee.domain.Group;
 import com.kodilla.ecommercee.dto.GroupDTO;
-import com.kodilla.ecommercee.exception.GroupNotFoundException;
+import com.kodilla.ecommercee.exception.GroupNotFoundByIdException;
 import com.kodilla.ecommercee.mapper.GroupMapper;
 import com.kodilla.ecommercee.service.GroupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -33,14 +32,14 @@ public class GroupController {
 
     @GetMapping("/{groupId}")
     public ResponseEntity<GroupDTO> getGroupById(@PathVariable Long groupId)
-            throws GroupNotFoundException {
+            throws GroupNotFoundByIdException {
         Group group = groupService.getGroupById(groupId);
         return ResponseEntity.ok(groupMapper.mapToGroupDTO(group));
     }
 
     @PutMapping("/{groupId}")
     public ResponseEntity<GroupDTO> updateGroup(@PathVariable Long groupId, @RequestBody GroupDTO dto)
-            throws GroupNotFoundException {
+            throws GroupNotFoundByIdException {
         Group group = groupMapper.mapToGroup(dto);
         return ResponseEntity.ok(groupMapper.mapToGroupDTO(groupService.updateGroup(groupId, group)));
     }

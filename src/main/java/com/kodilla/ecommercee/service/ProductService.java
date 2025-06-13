@@ -1,8 +1,7 @@
 package com.kodilla.ecommercee.service;
 
 import com.kodilla.ecommercee.domain.Product;
-import com.kodilla.ecommercee.exception.CartNotFoundException;
-import com.kodilla.ecommercee.exception.ProductNotFoundException;
+import com.kodilla.ecommercee.exception.ProductNotFoundByIdException;
 import com.kodilla.ecommercee.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,9 +19,9 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Product getProduct(Long productId) throws ProductNotFoundException {
+    public Product getProduct(Long productId) throws ProductNotFoundByIdException {
         return productRepository.findById(productId)
-                .orElseThrow(() -> new ProductNotFoundException(productId));
+                .orElseThrow(() -> new ProductNotFoundByIdException(productId));
     }
 
     public Product createProduct(Product product) {
@@ -37,9 +36,9 @@ public class ProductService {
         return productRepository.save(newProduct);
     }
 
-    public Product updateProduct(Product product) throws ProductNotFoundException {
+    public Product updateProduct(Product product) throws ProductNotFoundByIdException {
         Product existingProduct = productRepository.findById(product.getId())
-                .orElseThrow(() -> new ProductNotFoundException(product.getId()));
+                .orElseThrow(() -> new ProductNotFoundByIdException(product.getId()));
         existingProduct.setName(product.getName());
         existingProduct.setDescription(product.getDescription());
         existingProduct.setPrice(product.getPrice());
@@ -48,9 +47,9 @@ public class ProductService {
         return productRepository.save(existingProduct);
     }
 
-    public void deleteProduct(Long productId) throws  ProductNotFoundException {
+    public void deleteProduct(Long productId) throws ProductNotFoundByIdException {
         if (!productRepository.existsById(productId))
-                throw new ProductNotFoundException(productId);
+                throw new ProductNotFoundByIdException(productId);
         productRepository.deleteById(productId);
     }
 }

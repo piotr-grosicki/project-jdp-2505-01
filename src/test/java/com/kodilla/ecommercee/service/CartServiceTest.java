@@ -1,8 +1,8 @@
 package com.kodilla.ecommercee.service;
 
 import com.kodilla.ecommercee.domain.*;
-import com.kodilla.ecommercee.exception.CartNotFoundException;
-import com.kodilla.ecommercee.exception.ProductNotFoundException;
+import com.kodilla.ecommercee.exception.CartNotFoundByIdException;
+import com.kodilla.ecommercee.exception.ProductNotFoundByIdException;
 import com.kodilla.ecommercee.exception.ProductNotInCartException;
 import com.kodilla.ecommercee.repository.CartRepository;
 import com.kodilla.ecommercee.repository.OrderRepository;
@@ -60,7 +60,7 @@ class CartServiceTest {
     }
 
     @Test
-    void shouldGetCartContents() throws CartNotFoundException {
+    void shouldGetCartContents() throws CartNotFoundByIdException {
         // Given
         List<Product> products = new ArrayList<>();
         Cart cart = Cart.builder()
@@ -81,11 +81,11 @@ class CartServiceTest {
         when(cartRepository.findById(2L)).thenReturn(Optional.empty());
 
         // When / Then
-        assertThrows(CartNotFoundException.class, () -> cartService.getCartContents(2L));
+        assertThrows(CartNotFoundByIdException.class, () -> cartService.getCartContents(2L));
     }
 
     @Test
-    void shouldAddProductToCart() throws CartNotFoundException, ProductNotFoundException {
+    void shouldAddProductToCart() throws CartNotFoundByIdException, ProductNotFoundByIdException {
         // Given
         Cart cart = Cart.builder().id(1L).products(new ArrayList<>()).build();
         Product product = new Product();
@@ -104,7 +104,7 @@ class CartServiceTest {
     @Test
     void addProductToCartShouldThrowCartNotFound() {
         when(cartRepository.findById(3L)).thenReturn(Optional.empty());
-        assertThrows(CartNotFoundException.class, () -> cartService.addProductToCart(3L, 1L));
+        assertThrows(CartNotFoundByIdException.class, () -> cartService.addProductToCart(3L, 1L));
     }
 
     @Test
@@ -115,11 +115,11 @@ class CartServiceTest {
         when(productRepository.findById(9L)).thenReturn(Optional.empty());
 
         // When / Then
-        assertThrows(ProductNotFoundException.class, () -> cartService.addProductToCart(1L, 9L));
+        assertThrows(ProductNotFoundByIdException.class, () -> cartService.addProductToCart(1L, 9L));
     }
 
     @Test
-    void shouldRemoveProductFromCart() throws CartNotFoundException, ProductNotFoundException, ProductNotInCartException {
+    void shouldRemoveProductFromCart() throws CartNotFoundByIdException, ProductNotFoundByIdException, ProductNotInCartException {
         // Given
         Product product = new Product();
         List<Product> products = new ArrayList<>(); products.add(product);
@@ -139,7 +139,7 @@ class CartServiceTest {
     @Test
     void removeProductFromCartShouldThrowCartNotFound() {
         when(cartRepository.findById(4L)).thenReturn(Optional.empty());
-        assertThrows(CartNotFoundException.class, () -> cartService.removeProductFromCart(4L, 1L));
+        assertThrows(CartNotFoundByIdException.class, () -> cartService.removeProductFromCart(4L, 1L));
     }
 
     @Test
@@ -150,7 +150,7 @@ class CartServiceTest {
         when(productRepository.findById(8L)).thenReturn(Optional.empty());
 
         // When / Then
-        assertThrows(ProductNotFoundException.class, () -> cartService.removeProductFromCart(1L, 8L));
+        assertThrows(ProductNotFoundByIdException.class, () -> cartService.removeProductFromCart(1L, 8L));
     }
 
     @Test
@@ -167,7 +167,7 @@ class CartServiceTest {
 
     @Disabled
     @Test
-    void shouldConvertCartToOrder() throws CartNotFoundException {
+    void shouldConvertCartToOrder() throws CartNotFoundByIdException {
         // Given
         Cart cart = Cart.builder().id(2L).user(new User()).build();
         when(cartRepository.findById(2L)).thenReturn(Optional.of(cart));
@@ -185,6 +185,6 @@ class CartServiceTest {
     @Test
     void convertCartToOrderShouldThrowCartNotFound() {
         when(cartRepository.findById(99L)).thenReturn(Optional.empty());
-        assertThrows(CartNotFoundException.class, () -> cartService.convertCartToOrder(99L));
+        assertThrows(CartNotFoundByIdException.class, () -> cartService.convertCartToOrder(99L));
     }
 }

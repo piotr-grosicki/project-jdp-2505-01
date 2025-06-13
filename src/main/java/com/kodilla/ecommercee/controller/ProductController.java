@@ -2,14 +2,13 @@ package com.kodilla.ecommercee.controller;
 
 import com.kodilla.ecommercee.domain.Product;
 import com.kodilla.ecommercee.dto.ProductDTO;
-import com.kodilla.ecommercee.exception.ProductNotFoundException;
+import com.kodilla.ecommercee.exception.ProductNotFoundByIdException;
 import com.kodilla.ecommercee.mapper.ProductMapper;
 import com.kodilla.ecommercee.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -28,7 +27,7 @@ public class ProductController {
 
     @GetMapping("/{productId}")
     public ResponseEntity<ProductDTO> getProduct(@PathVariable Long productId)
-            throws ProductNotFoundException {
+            throws ProductNotFoundByIdException {
         Product product = productService.getProduct(productId);
         return ResponseEntity.ok(productMapper.toProductDTO(product));
     }
@@ -41,7 +40,7 @@ public class ProductController {
 
     @PutMapping
     public ResponseEntity<ProductDTO> updateProduct(@RequestBody ProductDTO dto)
-            throws ProductNotFoundException {
+            throws ProductNotFoundByIdException {
         Product product = productMapper.toProduct(dto);
         Product updatedProduct = productService.updateProduct(product);
         return ResponseEntity.ok(productMapper.toProductDTO(updatedProduct));
@@ -49,7 +48,7 @@ public class ProductController {
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long productId)
-            throws ProductNotFoundException {
+            throws ProductNotFoundByIdException {
         productService.deleteProduct(productId);
         return ResponseEntity.ok().build();
     }
