@@ -23,10 +23,11 @@ public class CartService {
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
 
-    public Cart createEmptyCart() {
+    public Cart createEmptyCart(User user) {
         Cart cart = Cart.builder()
                 .status(CartStatusEnum.CREATED)
                 .createdAt(LocalDateTime.now())
+                .user(user)
                 .build();
         return cartRepository.save(cart);
     }
