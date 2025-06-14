@@ -1,4 +1,5 @@
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/your-org/your-repo) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![CircleCI](https://circleci.com/gh/piotr-grosicki/project-jdp-2505-01.svg?style=svg)](https://app.circleci.com/pipelines/github/piotr-grosicki/project-jdp-2505-01?branch=main)
+ [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 # E-Commerce API
 
