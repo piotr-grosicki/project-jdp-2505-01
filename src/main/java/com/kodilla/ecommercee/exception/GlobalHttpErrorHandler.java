@@ -21,20 +21,26 @@ public class GlobalHttpErrorHandler extends ResponseEntityExceptionHandler {
                 + " doesn't exist", HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<String> handleProductNotFoundException(ProductNotFoundException ex) {
-        return new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);
+    @ExceptionHandler(ProductNotFoundByIdException.class)
+    public ResponseEntity<String> handleProductNotFoundByIdException(ProductNotFoundByIdException ex) {
+        return new ResponseEntity<>("Product with provided id:" + ex.getMessage()
+                + " doesn't exist", HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(GroupNotFoundException.class)
-    public ResponseEntity<String> handleGroupNotFoundException(GroupNotFoundException ex) {
-        return new ResponseEntity<>("Group with provided id doesn't exist.", HttpStatus.NOT_FOUND);
-
+    @ExceptionHandler(GroupNotFoundByIdException.class)
+    public ResponseEntity<String> handleGroupNotFoundByIdException(GroupNotFoundByIdException ex) {
+        return new ResponseEntity<>("Group with provided id:" + ex.getMessage()
+                + " doesn't exist", HttpStatus.NOT_FOUND);
     }
-    @ExceptionHandler(OrderNotFoundException.class)
-    public ResponseEntity<String> handleOrderNotFoundException(OrderNotFoundException ex) {
+    @ExceptionHandler(OrderNotFoundByIdException.class)
+    public ResponseEntity<String> handleOrderNotFoundByIdException(OrderNotFoundByIdException ex) {
         return new ResponseEntity<>("Order with provided id: " + ex.getMessage()
                 + " doesn't exist", HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(ProductNotInCartException.class)
+    public ResponseEntity<String> handleProductNotInCartException(ProductNotInCartException ex) {
+        return new ResponseEntity<>("Product with provided id: " + ex.getMessage()
+                + " is not in the cart.", HttpStatus.NOT_FOUND);
     }
 }
 

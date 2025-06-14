@@ -3,7 +3,7 @@ package com.kodilla.ecommercee.controller;
 import com.kodilla.ecommercee.domain.Order;
 import com.kodilla.ecommercee.domain.OrderStatusEnum;
 import com.kodilla.ecommercee.dto.OrderDTO;
-import com.kodilla.ecommercee.exception.OrderNotFoundException;
+import com.kodilla.ecommercee.exception.OrderNotFoundByIdException;
 import com.kodilla.ecommercee.mapper.OrderMapper;
 import com.kodilla.ecommercee.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,7 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<OrderDTO> getOrder(@PathVariable Long orderId) throws OrderNotFoundException {
+    public ResponseEntity<OrderDTO> getOrder(@PathVariable Long orderId) throws OrderNotFoundByIdException {
         Order order = orderService.getOrder(orderId);
         return ResponseEntity.ok(orderMapper.toDto(order));
     }
@@ -46,14 +46,14 @@ public class OrderController {
     }
 
     @PutMapping
-    public ResponseEntity<OrderDTO> updateOrder(@RequestBody OrderDTO dto) throws OrderNotFoundException {
+    public ResponseEntity<OrderDTO> updateOrder(@RequestBody OrderDTO dto) throws OrderNotFoundByIdException {
         Order order = orderMapper.toEntity(dto);
         Order updated = orderService.updateOrder(order);
         return ResponseEntity.ok(orderMapper.toDto(updated));
     }
 
     @DeleteMapping("/{orderId}")
-    public ResponseEntity<Void> deleteOrder(@PathVariable Long orderId) throws OrderNotFoundException {
+    public ResponseEntity<Void> deleteOrder(@PathVariable Long orderId) throws OrderNotFoundByIdException {
         orderService.deleteOrder(orderId);
         return ResponseEntity.ok().build();
     }
