@@ -7,7 +7,6 @@ import com.kodilla.ecommercee.dto.ProductDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -21,7 +20,7 @@ public class CartMapper {
         List<ProductDTO> products = productMapper.mapToProductDTOList(cart.getProducts());
         return new CartDTO(cart.getId(), status, cart.getCreatedAt(),
                 getProductIdList(products),
-                cart.getId(),
+                cart.getUser().getId(),
                 cart.getOrder() != null ? cart.getOrder().getId() : null);
     }
 

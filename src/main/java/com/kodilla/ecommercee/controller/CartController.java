@@ -37,7 +37,7 @@ public class CartController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<CartDTO> createEmptyCart(@RequestBody Long userId)
+    public ResponseEntity<CartDTO> createEmptyCart(@RequestParam Long userId)
             throws UserNotFoundByIdException {
         User user = userService.getUser(userId);
         CartDTO cartDto = cartMapper.mapToCartDto(cartService.createEmptyCart(user));
