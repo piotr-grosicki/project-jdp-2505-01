@@ -62,7 +62,7 @@ class CartMapperTest {
     void shouldMapToCart() {
         // Given
         LocalDateTime createdAt = LocalDateTime.of(2025, 6, 7, 12, 0,0);
-        CartDTO dto = new CartDTO(5L, "COMPLETED", createdAt, null);
+        CartDTO dto = new CartDTO(5L, "COMPLETED", createdAt, null, null, null);
 
         // When
         Cart result = cartMapper.mapToCart(dto);
@@ -76,7 +76,7 @@ class CartMapperTest {
     @Test
     void shouldMapToCartWithNulls() {
         // Given
-        CartDTO dto = new CartDTO(null, null, null, List.of());
+        CartDTO dto = new CartDTO(null, null, null, List.of(), null, null);
 
         // When
         Cart result = cartMapper.mapToCart(dto);
