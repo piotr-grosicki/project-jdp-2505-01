@@ -6,5 +6,7 @@ import java.util.List;
 public record CartDTO (Long id,
                        String status,
                        LocalDateTime createdAt,
-                       List<Long> products) {
+                       List<Long> products,
+                       Long userId,
+                       Long orderId) {
 }
