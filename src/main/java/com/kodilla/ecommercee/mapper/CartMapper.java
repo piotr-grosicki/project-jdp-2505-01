@@ -20,9 +20,15 @@ public class CartMapper {
         String status = cart.getStatus() != null ? cart.getStatus().name() : null;
         List<ProductDTO> products = productMapper.mapToProductDTOList(cart.getProducts());
         return new CartDTO(cart.getId(), status, cart.getCreatedAt(),
-                products.stream()
+                getProductIdList(products),
+                cart.getId(),
+                cart.getOrder() != null ? cart.getOrder().getId() : null);
+    }
+
+    private List<Long> getProductIdList(List<ProductDTO> products) {
+        return products.stream()
                 .map(this::getId)
-                .toList());
+                .toList();
     }
 
     public Cart mapToCart(CartDTO cartDto) {
