@@ -5,6 +5,7 @@ import com.kodilla.ecommercee.dto.UserDTO;
 import com.kodilla.ecommercee.exception.UserNotFoundByIdException;
 import com.kodilla.ecommercee.mapper.UserMapper;
 import com.kodilla.ecommercee.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,17 +42,23 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO dto)
+    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO dto,
+                                              HttpServletRequest request)
             throws UserNotFoundByIdException {
+
+        User authenticatedUser = (User) request.getAttribute("authenticatedUser");
         User user = userMapper.toEntity(dto);
-        User updated = userService.updateUser(user);
+        User updated = userService.updateUser(user, authenticatedUser);
         return ResponseEntity.ok(userMapper.toDto(updated));
     }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long userId)
+    public ResponseEntity<Void> deleteUser(@PathVariable Long userId,
+                                           HttpServletRequest request)
             throws UserNotFoundByIdException {
-        userService.deleteUser(userId);
+
+        User authenticatedUser = (User) request.getAttribute("authenticatedUser");
+        userService.deleteUser(userId, authenticatedUser);
         return ResponseEntity.ok().build();
     }
 
@@ -63,9 +70,12 @@ public class UserController {
     }
 
     @PostMapping("/{userId}/keys")
-    public ResponseEntity<UserDTO> generateKey(@PathVariable Long userId)
+    public ResponseEntity<UserDTO> generateKey(@PathVariable Long userId,
+                                               HttpServletRequest request)
             throws UserNotFoundByIdException {
-        User updated = userService.generateKey(userId);
+
+        User authenticatedUser = (User) request.getAttribute("authenticatedUser");
+        User updated = userService.generateKey(userId, authenticatedUser);
         return ResponseEntity.ok(userMapper.toDto(updated));
     }
 }

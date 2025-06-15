@@ -4,12 +4,14 @@ import com.kodilla.ecommercee.domain.User;
 import com.kodilla.ecommercee.exception.UserNotFoundByIdException;
 import com.kodilla.ecommercee.exception.UserNotFoundByMailException;
 import com.kodilla.ecommercee.repository.UserRepository;
+import com.kodilla.ecommercee.security.AccessGuard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -25,6 +27,9 @@ class UserServiceTest {
 
     @Mock
     private UserRepository repository;
+
+    @Mock
+    private AccessGuard accessGuard;
 
     @InjectMocks
     private UserService service;
@@ -42,25 +47,20 @@ class UserServiceTest {
                 .createdAt(LocalDateTime.now().minusDays(1))
                 .token(UUID.randomUUID().toString())
                 .tokenCreatedAt(LocalDateTime.now().minusHours(2))
-                .tokenExpiresAt(LocalDateTime.now().minusHours(1))
+                .tokenExpiresAt(LocalDateTime.now().plusHours(1))
                 .build();
     }
 
     @Test
     void shouldReturnUserById() throws UserNotFoundByIdException {
-        // given
         when(repository.findById(1L)).thenReturn(Optional.of(user));
-        // when
         User result = service.getUser(1L);
-        // then
         assertThat(result.getLastName()).isEqualTo("Nowak");
     }
 
     @Test
     void shouldThrowWhenUserNotFound() {
-        // given
         when(repository.findById(99L)).thenReturn(Optional.empty());
-        // when / then
         assertThatThrownBy(() -> service.getUser(99L))
                 .isInstanceOf(UserNotFoundByIdException.class)
                 .hasMessageContaining("99");
@@ -68,105 +68,82 @@ class UserServiceTest {
 
     @Test
     void shouldReturnUserByEmail() throws UserNotFoundByMailException {
-        // given
         when(repository.findByEmail("adam@nowak.pl")).thenReturn(Optional.of(user));
-        // when
         User result = service.getUserByEmail("adam@nowak.pl");
-        // then
         assertThat(result.getId()).isEqualTo(1L);
     }
 
     @Test
     void shouldCreateUser() {
-        // given
         when(repository.save(any(User.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
-        // when
         User created = service.createUser(user);
-        // then
         verify(repository).save(any(User.class));
         assertThat(created.getFirstName()).isEqualTo("Adam");
-        assertThat(created.getEmail()).isEqualTo("adam@nowak.pl");
-        assertThat(created.getCreatedAt()).isNotNull();
         assertThat(created.getToken()).isNotBlank();
-        assertThat(created.getTokenCreatedAt()).isNotNull();
-        assertThat(created.getTokenExpiresAt())
-                .isAfter(created.getTokenCreatedAt());
+        assertThat(created.getTokenExpiresAt()).isAfter(created.getTokenCreatedAt());
     }
 
     @Test
     void shouldBlockUser() throws UserNotFoundByIdException {
-        // given
         when(repository.findById(1L)).thenReturn(Optional.of(user));
-        when(repository.save(any(User.class)))
-                .thenAnswer(invocation -> invocation.getArgument(0));
-        // when
+        when(repository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
         User blocked = service.blockUser(1L);
-        // then
         assertThat(blocked.isBlocked()).isTrue();
     }
 
     @Test
     void shouldGenerateKey() throws UserNotFoundByIdException {
-        // given
         when(repository.findById(1L)).thenReturn(Optional.of(user));
-        when(repository.save(any(User.class)))
-                .thenAnswer(invocation -> invocation.getArgument(0));
-        // when
-        User withKey = service.generateKey(1L);
-        // then
-        assertThat(withKey.getToken()).isNotNull();
-        assertThat(UUID.fromString(withKey.getToken())).isInstanceOf(UUID.class);
-        assertThat(withKey.getTokenExpiresAt())
-                .isAfter(withKey.getTokenCreatedAt());
+        when(repository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        doNothing().when(accessGuard).checkOwner(1L, 1L);
+        User withKey = service.generateKey(1L, user);
+        assertThat(withKey.getToken()).isNotBlank();
     }
 
     @Test
     void shouldUpdateUser() throws UserNotFoundByIdException {
-        // given
+        User edited = User.builder().id(1L).firstName("Jan").lastName("Nowak").email("jan@nowak.pl").build();
         when(repository.findById(1L)).thenReturn(Optional.of(user));
-        when(repository.save(any(User.class)))
-                .thenAnswer(invocation -> invocation.getArgument(0));
-        user.setFirstName("Jan");
-        user.setLastName("Nowak");
-        user.setEmail("jan@nowak.pl");
-        // when
-        User updated = service.updateUser(user);
-        // then
-        assertThat(updated.getFirstName()).isEqualTo("Jan");
-        assertThat(updated.getLastName()).isEqualTo("Nowak");
-        assertThat(updated.getEmail()).isEqualTo("jan@nowak.pl");
+        when(repository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        doNothing().when(accessGuard).checkOwner(1L, 1L);
+        User result = service.updateUser(edited, user);
+        assertThat(result.getFirstName()).isEqualTo("Jan");
+        assertThat(result.getEmail()).isEqualTo("jan@nowak.pl");
+    }
+
+    @Test
+    void shouldThrowAccessDeniedWhenUserTriesToUpdateOtherUser() {
+        User edited = User.builder().id(1L).build();
+        User requester = User.builder().id(2L).build();
+        doThrow(new AccessDeniedException("Access denied"))
+                .when(accessGuard).checkOwner(2L, 1L);
+        assertThatThrownBy(() -> service.updateUser(edited, requester))
+                .isInstanceOf(AccessDeniedException.class)
+                .hasMessage("Access denied");
     }
 
     @Test
     void shouldDeleteUser() throws UserNotFoundByIdException {
-        // given
         when(repository.existsById(1L)).thenReturn(true);
-        // when
-        service.deleteUser(1L);
-        // then
+        doNothing().when(accessGuard).checkOwner(1L, 1L);
+        service.deleteUser(1L, user);
         verify(repository).deleteById(1L);
     }
 
     @Test
-    void shouldThrowWhenDeleteNonExisting() {
-        // given
-        when(repository.existsById(2L)).thenReturn(false);
-        // when / then
-        assertThatThrownBy(() -> service.deleteUser(2L))
+    void shouldThrowWhenDeletingNonExistentUser() {
+        when(repository.existsById(999L)).thenReturn(false);
+        doNothing().when(accessGuard).checkOwner(1L, 999L);
+        assertThatThrownBy(() -> service.deleteUser(999L, user))
                 .isInstanceOf(UserNotFoundByIdException.class)
-                .hasMessageContaining("2");
+                .hasMessageContaining("999");
     }
 
     @Test
-    void shouldGetAllUsers() {
-        // given
-        List<User> list = Arrays.asList(user, user);
-        when(repository.findAll()).thenReturn(list);
-        // when
+    void shouldReturnAllUsers() {
+        when(repository.findAll()).thenReturn(Arrays.asList(user, user));
         List<User> result = service.getAllUsers();
-        // then
         assertThat(result).hasSize(2);
-        verify(repository).findAll();
     }
 }

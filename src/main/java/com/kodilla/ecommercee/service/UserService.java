@@ -3,6 +3,7 @@ package com.kodilla.ecommercee.service;
 import com.kodilla.ecommercee.domain.User;
 import com.kodilla.ecommercee.exception.UserNotFoundByIdException;
 import com.kodilla.ecommercee.repository.UserRepository;
+import com.kodilla.ecommercee.security.AccessGuard;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final AccessGuard accessGuard;
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -47,7 +49,9 @@ public class UserService {
     }
 
     @Transactional
-    public User updateUser(User user) throws UserNotFoundByIdException {
+    public User updateUser(User user, User authenticatedUser) throws UserNotFoundByIdException {
+        accessGuard.checkOwner(authenticatedUser.getId(), user.getId());
+
         User editedUser = getUser(user.getId());
         if (user.getFirstName() != null) {
             editedUser.setFirstName(user.getFirstName());
@@ -62,7 +66,9 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser(Long id) throws UserNotFoundByIdException {
+    public void deleteUser(Long id, User authenticatedUser) throws UserNotFoundByIdException {
+        accessGuard.checkOwner(authenticatedUser.getId(), id);
+
         if (!userRepository.existsById(id)) {
             throw new UserNotFoundByIdException(id);
         }
@@ -77,7 +83,9 @@ public class UserService {
     }
 
     @Transactional
-    public User generateKey(Long id) throws UserNotFoundByIdException {
+    public User generateKey(Long id, User authenticatedUser) throws UserNotFoundByIdException {
+        accessGuard.checkOwner(authenticatedUser.getId(), id);
+
         User user = getUser(id);
         user.setToken(UUID.randomUUID().toString());
         user.setTokenCreatedAt(LocalDateTime.now());
