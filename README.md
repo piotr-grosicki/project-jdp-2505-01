@@ -1,4 +1,5 @@
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/your-org/your-repo) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![CircleCI](https://circleci.com/gh/piotr-grosicki/project-jdp-2505-01.svg?style=svg)](https://app.circleci.com/pipelines/github/piotr-grosicki/project-jdp-2505-01?branch=main)
+ [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 # E-Commerce API
 
@@ -63,12 +64,12 @@ Comprehensive, production-ready RESTful API for an online store, built with Spri
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/your-org/your-repo.git
-   cd your-repo
+   git clone https://github.com/piotr-grosicki/project-jdp-2505-01.git
+   cd project-jdp-2505-01
    ```
 
 2. **Configure database**
-   Edit `src/main/resources/application.yml` with your database credentials.
+   Edit `src/main/resources/application.yaml` with your database credentials.
 
 3. **Build the project**
 
@@ -140,13 +141,13 @@ spring:
 ./gradlew bootRun
 ```
 
-The API will be accessible at `http://localhost:8080/api`.
+The API will be accessible at `http://localhost:8080/api/v1/`.
 
 ---
 
 ## API Documentation
 
-Base URL: `http://localhost:8080/api`
+Base URL: `http://localhost:8080`
 
 ### Products
 
@@ -323,5 +324,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Contact
 
-Project Maintainer – [Your Name](mailto:your.email@example.com)
-GitHub: [your-org/your-repo](https://github.com/your-org/your-repo)
+GitHub: [piotr-grosicki/project-jdp-2505-01](https://github.com/piotr-grosicki/project-jdp-2505-01)

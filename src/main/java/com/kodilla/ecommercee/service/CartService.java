@@ -11,6 +11,7 @@ import com.kodilla.ecommercee.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +25,11 @@ public class CartService {
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
 
-    public Cart createEmptyCart() {
+    public Cart createEmptyCart(User user) {
         Cart cart = Cart.builder()
                 .status(CartStatusEnum.CREATED)
                 .createdAt(LocalDateTime.now())
+                .user(user)
                 .build();
         return cartRepository.save(cart);
     }
@@ -66,14 +68,19 @@ public class CartService {
         Cart existingCart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new CartNotFoundByIdException(cartId));
 
+
         if (existingCart.getOrder() != null) {
             throw new CartAlreadyHasAnOrderException(cartId.toString());
         }
 
+        BigDecimal totalPrice = existingCart.getProducts().stream()
+                .map(Product::getPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
         Order newOrder = Order.builder()
                 .cart(existingCart)
                 .user(existingCart.getUser())
                 .status(OrderStatusEnum.NEW)
+                .totalAmount(totalPrice)
                 .createdAt(LocalDateTime.now())
                 .products(new ArrayList<>(existingCart.getProducts()))
                 .build();

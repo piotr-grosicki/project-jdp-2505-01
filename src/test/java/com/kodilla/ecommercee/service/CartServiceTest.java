@@ -43,20 +43,26 @@ class CartServiceTest {
     @Test
     void shouldCreateEmptyCart() {
         // Given
+        User user = User.builder()
+                .id(101L)
+                .build();
+
         Cart savedCart = Cart.builder()
                 .id(1L)
                 .status(CartStatusEnum.CREATED)
                 .createdAt(LocalDateTime.now())
+                .user(user)
                 .build();
         when(cartRepository.save(any(Cart.class))).thenReturn(savedCart);
 
         // When
-        Cart result = cartService.createEmptyCart();
+        Cart result = cartService.createEmptyCart(user);
 
         // Then
         assertNotNull(result);
         assertEquals(1L, result.getId());
         assertEquals(CartStatusEnum.CREATED, result.getStatus());
+        assertEquals(101L, result.getUser().getId());
         verify(cartRepository, times(1)).save(any(Cart.class));
     }
 
