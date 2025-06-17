@@ -3,16 +3,19 @@ package com.kodilla.ecommercee.controller;
 import com.kodilla.ecommercee.domain.Cart;
 import com.kodilla.ecommercee.domain.Order;
 import com.kodilla.ecommercee.domain.Product;
+import com.kodilla.ecommercee.domain.User;
 import com.kodilla.ecommercee.dto.CartDTO;
 import com.kodilla.ecommercee.dto.OrderDTO;
 import com.kodilla.ecommercee.dto.ProductDTO;
 import com.kodilla.ecommercee.exception.CartNotFoundByIdException;
 import com.kodilla.ecommercee.exception.ProductNotFoundByIdException;
 import com.kodilla.ecommercee.exception.ProductNotInCartException;
+import com.kodilla.ecommercee.exception.UserNotFoundByIdException;
 import com.kodilla.ecommercee.mapper.CartMapper;
 import com.kodilla.ecommercee.mapper.OrderMapper;
 import com.kodilla.ecommercee.mapper.ProductMapper;
 import com.kodilla.ecommercee.service.CartService;
+import com.kodilla.ecommercee.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,13 +29,18 @@ public class CartController {
 
     private final CartService cartService;
     private final CartMapper cartMapper;
+
     private final OrderMapper orderMapper;
 
     private final ProductMapper productMapper;
 
+    private final UserService userService;
+
     @PostMapping
-    public ResponseEntity<CartDTO> createEmptyCart() {
-        CartDTO cartDto = cartMapper.mapToCartDto(cartService.createEmptyCart());
+    public ResponseEntity<CartDTO> createEmptyCart(@RequestParam Long userId)
+            throws UserNotFoundByIdException {
+        User user = userService.getUser(userId);
+        CartDTO cartDto = cartMapper.mapToCartDto(cartService.createEmptyCart(user));
         return ResponseEntity.ok(cartDto);
     }
 

@@ -20,7 +20,7 @@ class CartDTOTest {
                 LocalDateTime.of(2025, 6, 7, 12, 0,0);
 
         // When
-        CartDTO cart = new CartDTO(expectedId, expectedStatus, expectedCreatedAt, products);
+        CartDTO cart = new CartDTO(expectedId, expectedStatus, expectedCreatedAt, products, null, null);
 
         // Then
         assertEquals(expectedId, cart.id());
@@ -36,11 +36,11 @@ class CartDTOTest {
         List<Long> products = List.of(1L, 2L, 3L);
         LocalDateTime createdAt = LocalDateTime.of(2025, 6, 7, 12, 0,0);
         CartDTO cart1 =
-                new CartDTO(1L, "NEW", createdAt, products);
+                new CartDTO(1L, "NEW", createdAt, products, null, null);
         CartDTO cart2 =
-                new CartDTO(1L, "NEW", createdAt, products);
+                new CartDTO(1L, "NEW", createdAt, products, null, null);
         CartDTO cart3 =
-                new CartDTO(2L, "NEW", createdAt, products);
+                new CartDTO(2L, "NEW", createdAt, products, null, null);
 
         // Then
         assertEquals(cart1, cart2, "Carts with same data should be equal");
@@ -57,7 +57,7 @@ class CartDTOTest {
         Long id = 42L;
         String status = "COMPLETED";
         LocalDateTime createdAt = LocalDateTime.of(2025, 6, 7, 12, 0,0);
-        CartDTO cart = new CartDTO(id, status, createdAt, products);
+        CartDTO cart = new CartDTO(id, status, createdAt, products, null, null);
 
         // When
         String repr = cart.toString();
