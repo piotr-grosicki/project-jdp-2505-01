@@ -37,9 +37,7 @@ public class Cart {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne
-    @JoinColumn(name = "order_id")
+    @Setter
+    @OneToOne(mappedBy = "cart", cascade = CascadeType.ALL)
     private Order order;
-
-
 }

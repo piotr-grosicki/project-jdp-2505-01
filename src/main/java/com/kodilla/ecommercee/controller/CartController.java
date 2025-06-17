@@ -7,6 +7,7 @@ import com.kodilla.ecommercee.domain.User;
 import com.kodilla.ecommercee.dto.CartDTO;
 import com.kodilla.ecommercee.dto.OrderDTO;
 import com.kodilla.ecommercee.dto.ProductDTO;
+import com.kodilla.ecommercee.exception.CartAlreadyHasAnOrderException;
 import com.kodilla.ecommercee.exception.CartNotFoundByIdException;
 import com.kodilla.ecommercee.exception.ProductNotFoundByIdException;
 import com.kodilla.ecommercee.exception.ProductNotInCartException;
@@ -69,7 +70,7 @@ public class CartController {
 
     @PostMapping("/{cartId}/orders")
     public ResponseEntity<OrderDTO> convertCartToOrder(@PathVariable Long cartId)
-            throws CartNotFoundByIdException {
+            throws CartNotFoundByIdException, CartAlreadyHasAnOrderException {
         Order order = cartService.convertCartToOrder(cartId);
         return ResponseEntity.ok(orderMapper.toDto(order));
     }

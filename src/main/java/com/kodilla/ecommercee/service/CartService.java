@@ -1,6 +1,7 @@
 package com.kodilla.ecommercee.service;
 
 import com.kodilla.ecommercee.domain.*;
+import com.kodilla.ecommercee.exception.CartAlreadyHasAnOrderException;
 import com.kodilla.ecommercee.exception.CartNotFoundByIdException;
 import com.kodilla.ecommercee.exception.ProductNotFoundByIdException;
 import com.kodilla.ecommercee.exception.ProductNotInCartException;
@@ -61,9 +62,17 @@ public class CartService {
         return cartRepository.save(existingCart);
     }
 
-    public Order convertCartToOrder(Long cartId) throws CartNotFoundByIdException {
+    public Order convertCartToOrder(Long cartId)
+            throws CartNotFoundByIdException, CartAlreadyHasAnOrderException {
+
         Cart existingCart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new CartNotFoundByIdException(cartId));
+
+
+        if (existingCart.getOrder() != null) {
+            throw new CartAlreadyHasAnOrderException(cartId.toString());
+        }
+
         BigDecimal totalPrice = existingCart.getProducts().stream()
                 .map(Product::getPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -75,6 +84,9 @@ public class CartService {
                 .createdAt(LocalDateTime.now())
                 .products(new ArrayList<>(existingCart.getProducts()))
                 .build();
+
+        existingCart.setOrder(newOrder);
+
         return orderRepository.save(newOrder);
     }
 

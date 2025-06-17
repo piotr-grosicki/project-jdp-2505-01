@@ -1,6 +1,7 @@
 package com.kodilla.ecommercee.service;
 
 import com.kodilla.ecommercee.domain.*;
+import com.kodilla.ecommercee.exception.CartAlreadyHasAnOrderException;
 import com.kodilla.ecommercee.exception.CartNotFoundByIdException;
 import com.kodilla.ecommercee.exception.ProductNotFoundByIdException;
 import com.kodilla.ecommercee.exception.ProductNotInCartException;
@@ -173,7 +174,7 @@ class CartServiceTest {
 
     @Disabled
     @Test
-    void shouldConvertCartToOrder() throws CartNotFoundByIdException {
+    void shouldConvertCartToOrder() throws CartNotFoundByIdException, CartAlreadyHasAnOrderException {
         // Given
         Cart cart = Cart.builder().id(2L).user(new User()).build();
         when(cartRepository.findById(2L)).thenReturn(Optional.of(cart));
