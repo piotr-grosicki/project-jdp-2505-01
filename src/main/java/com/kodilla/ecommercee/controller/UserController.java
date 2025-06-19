@@ -53,13 +53,13 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long userId,
+    public ResponseEntity<String> deleteUser(@PathVariable Long userId,
                                            HttpServletRequest request)
             throws UserNotFoundByIdException {
 
         User authenticatedUser = (User) request.getAttribute("authenticatedUser");
         userService.deleteUser(userId, authenticatedUser);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("User with ID " + userId + " was successfully deleted.");
     }
 
     @PutMapping("/block/{userId}")
